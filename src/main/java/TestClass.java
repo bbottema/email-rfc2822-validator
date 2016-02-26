@@ -1,5 +1,5 @@
-import org.les.casey.bottema.emailaddress.EmailAddressCriteria;
-import org.les.casey.bottema.emailaddress.EmailAddressValidator;
+import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
+import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator;
 
 public class TestClass {
 	/* quick test some email addresses

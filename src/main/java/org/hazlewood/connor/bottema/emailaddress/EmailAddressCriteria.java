@@ -1,4 +1,4 @@
-package org.les.casey.bottema.emailaddress;
+package org.hazlewood.connor.bottema.emailaddress;
 
 import static java.util.EnumSet.of;
 

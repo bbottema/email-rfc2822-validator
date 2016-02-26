@@ -1,10 +1,4 @@
-package org.les.casey.bottema.emailaddress;
-
-import static org.les.casey.bottema.emailaddress.EmailAddressCriteria.ALLOW_DOMAIN_LITERALS;
-import static org.les.casey.bottema.emailaddress.EmailAddressCriteria.ALLOW_DOT_IN_A_TEXT;
-import static org.les.casey.bottema.emailaddress.EmailAddressCriteria.ALLOW_PARENS_IN_LOCALPART;
-import static org.les.casey.bottema.emailaddress.EmailAddressCriteria.ALLOW_QUOTED_IDENTIFIERS;
-import static org.les.casey.bottema.emailaddress.EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT;
+package org.hazlewood.connor.bottema.emailaddress;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -95,8 +89,8 @@ final class Dragons {
 
 		//RFC 2822 3.2.4 Atom:
 
-		final String atext = "[a-zA-Z0-9\\!\\#-\\'\\*\\+\\-\\/\\=\\?\\^-\\`\\{-\\~" + (criteria.contains(ALLOW_DOT_IN_A_TEXT) ? "\\." : "") + (criteria
-				.contains(ALLOW_SQUARE_BRACKETS_IN_A_TEXT) ? "\\[\\]" : "") + "]";
+		final String atext = "[a-zA-Z0-9\\!\\#-\\'\\*\\+\\-\\/\\=\\?\\^-\\`\\{-\\~" + (criteria.contains(EmailAddressCriteria.ALLOW_DOT_IN_A_TEXT) ? "\\." : "") + (criteria
+				.contains(EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT) ? "\\[\\]" : "") + "]";
 		// regular atext is same as atext but has no . or [ or ] allowed, no matter the class prefs, to prevent
 		// long recursions on e.g. "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t"
 		final String regularAtext = "[a-zA-Z0-9\\!\\#-\\'\\*\\+\\-\\/\\=\\?\\^-\\`\\{-\\~]";
@@ -111,7 +105,7 @@ final class Dragons {
 		//noWsCtl and the rest of ASCII except the doublequote and backslash characters:
 
 		final String qtext = "[" + noWsCtl + "\\!\\#-\\[\\]-\\~]";
-		final String localPartqtext = "[" + noWsCtl + (criteria.contains(ALLOW_PARENS_IN_LOCALPART) ? "\\!\\#-\\[\\]-\\~]" : "\\!\\#-\\'\\*-\\[\\]-\\~]");
+		final String localPartqtext = "[" + noWsCtl + (criteria.contains(EmailAddressCriteria.ALLOW_PARENS_IN_LOCALPART) ? "\\!\\#-\\[\\]-\\~]" : "\\!\\#-\\'\\*-\\[\\]-\\~]");
 
 		final String qcontent = "(?:" + qtext + "|" + quotedPair + ")";
 		final String localPartqcontent = "(?>" + localPartqtext + "|" + quotedPair + ")";
@@ -157,8 +151,8 @@ final class Dragons {
 		// allows the cfws before and after.
 		// final String domain =
 		//    ALLOW_DOMAIN_LITERALS ? rfc2822Domain : rfc1035DomainName;
-		final String domain = criteria.contains(ALLOW_DOMAIN_LITERALS) ? rfc2822Domain : "(?:" + cfws + ")?(" + rfc1035DomainName + ")(?:" + cfws + ")?";
-		final String capCFWSDomain = criteria.contains(ALLOW_DOMAIN_LITERALS) ?
+		final String domain = criteria.contains(EmailAddressCriteria.ALLOW_DOMAIN_LITERALS) ? rfc2822Domain : "(?:" + cfws + ")?(" + rfc1035DomainName + ")(?:" + cfws + ")?";
+		final String capCFWSDomain = criteria.contains(EmailAddressCriteria.ALLOW_DOMAIN_LITERALS) ?
 				capCFWSRfc2822Domain :
 				"(?:" + cfws + ")?(" + rfc1035DomainName + ")(" + cfws + ")?";
 		final String localPart = "(" + capDotAtomNoCFWS + "|" + localPartQuotedString + ")";
@@ -175,7 +169,7 @@ final class Dragons {
 		// issue of recursion on long strings like [A-Za-z], but issue was solved by
 		// changing phrase definition (see above):
 		final String nameAddr = "(" + phrase + ")??(" + angleAddr + ")";
-		final String mailbox = (criteria.contains(ALLOW_QUOTED_IDENTIFIERS) ? "(" + nameAddr + ")|" : "") + "(" + uniqueAddrSpec + ")";
+		final String mailbox = (criteria.contains(EmailAddressCriteria.ALLOW_QUOTED_IDENTIFIERS) ? "(" + nameAddr + ")|" : "") + "(" + uniqueAddrSpec + ")";
 
 		final String returnPath = "(?:(?:" + cfws + ")?<((?:" + cfws + ")?|" + addrSpec + ")>(?:" + cfws + ")?)";
 

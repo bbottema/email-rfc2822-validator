@@ -5,7 +5,7 @@
  *
  * @author Les Hazlewood, Casey Connor, Benny Bottema
  */
-package org.les.casey.bottema.emailaddress;
+package org.hazlewood.connor.bottema.emailaddress;
 
 /*
  * Original code Copyright 2008 Les Hazlewood
