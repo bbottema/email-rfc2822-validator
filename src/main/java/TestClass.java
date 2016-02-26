@@ -14,6 +14,7 @@ public class TestClass {
 		assertEmail("!#$%&'+-/=.?^`{|}~@[IPv6:0123:4567:89AB:CDEF:0123:4567:89AB:CDEF]", true);
 		assertEmail("me(this is a comment)@example.com", true); // comments are discouraged but not prohibited by RFC2822.
 		assertEmail("me.example@com", true);
+		assertEmail("309d4696df38ff12c023600e3bc2bd4b@fakedomain.com", true);
 
 		assertEmail("NotAnEmail", false);
 		assertEmail("me@", false);
