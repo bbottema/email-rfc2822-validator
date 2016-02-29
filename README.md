@@ -1,4 +1,4 @@
-[![MIT License][LICENSE]]
+[![MIT License][https://img.shields.io/badge/license-apachev2-blue.svg?style=flat]][LICENSE]
 
 # email-rfc2822-validator
 The world's only more-or-less-2822-compliant Java-based email address extractor / verifier
