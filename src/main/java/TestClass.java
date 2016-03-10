@@ -15,6 +15,7 @@ public class TestClass {
 		assertEmail("me(this is a comment)@example.com", true); // comments are discouraged but not prohibited by RFC2822.
 		assertEmail("me.example@com", true);
 		assertEmail("309d4696df38ff12c023600e3bc2bd4b@fakedomain.com", true);
+		assertEmail("ewiuhdghiufduhdvjhbajbkerwukhgjhvxbhvbsejskuadukfhgskjebf@gmail.net", true);
 
 		assertEmail("NotAnEmail", false);
 		assertEmail("me@", false);
