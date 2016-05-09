@@ -1,6 +1,8 @@
-[![APACHE v2 License](https://img.shields.io/badge/license-apachev2-blue.svg?style=flat)](LICENSE)
+[![APACHE v2 License](https://img.shields.io/badge/license-apachev2-blue.svg?style=flat)](LICENSE) [![Latest Release](https://img.shields.io/maven-central/v/com.github.bbottema/email-rfc2822-validator.svg?style=flat)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.bbottema%22%20AND%20a%3A%22email-rfc2822-validator%22) [![Build Status](https://img.shields.io/travis/bbottema/email-rfc2822-validator.svg?style=flat)](https://travis-ci.org/bbottema/email-rfc2822-validator) [![Codacy](https://img.shields.io/codacy/7cf43e32227f443780e7b16018542e24.svg?style=flat)](https://www.codacy.com/app/b-bottema/email-rfc2822-validator)
 
-# email-rfc2822-validator
+
+# email-rfc2822-validator #
+
 The world's only more-or-less-2822-compliant Java-based email address extractor / verifier
 
 * Author: http://stackoverflow.com/a/13133880/441662
