@@ -10,6 +10,16 @@ The world's only more-or-less-2822-compliant Java-based email address extractor 
 * Origin: http://lacinato.com/cm/software/emailrelated/emailaddress
 * Used in: https://github.com/bbottema/simple-java-mail
 
+email-rfc2822-validator is available in Maven Central:
+
+```
+<dependency>
+    <groupId>com.github.bbottema</groupId>
+    <artifactId>emailaddress-rfc2822</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 ## Usage
 
 There are two classes available, EmailaddressValidator and EmailAddressParser. The second is used to extract data from (complex / mangled) email strings.
@@ -28,16 +38,6 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_D
 
 ---
 
-
-email-rfc2822-validator is available in Maven Central:
-
-```
-<dependency>
-    <groupId>com.github.bbottema</groupId>
-    <artifactId>emailaddress-rfc2822</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
 
 ### Latest Progress ###
 
