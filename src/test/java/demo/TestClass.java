@@ -1,3 +1,5 @@
+package demo;
+
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator;
 
@@ -31,6 +33,6 @@ public class TestClass {
 		final boolean isValid = EmailAddressValidator.isValid(emailaddress, EmailAddressCriteria.RFC_COMPLIANT);
 		if (isValid != expected) {
 			throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, isValid));
-		};
+		}
 	}
 }
