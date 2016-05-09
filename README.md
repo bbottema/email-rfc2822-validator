@@ -22,3 +22,23 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EmailAddressCriter
 boolean isValid = EmailAddressValidator.isValid(emailaddress, EmailAddressCriteria.RFC_COMPLIANT);
 boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_DOT_IN_A_TEXT, ALLOW_SQUARE_BRACKETS_IN_A_TEXT));
 ```
+
+
+---
+
+
+email-rfc2822-validator is available in Maven Central:
+
+```
+<dependency>
+    <groupId>com.github.bbottema</groupId>
+    <artifactId>emailaddress-rfc2822</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+### Latest Progress ###
+
+v1.0.0
+
+Initial release
