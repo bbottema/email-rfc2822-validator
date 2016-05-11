@@ -6,7 +6,7 @@
 	<artifactId>emailaddress-rfc2822</artifactId>
 	<packaging>jar</packaging>
 	<name>EmailAddress RFC2822</name>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<description>The world's only more-or-less-2822-compliant Java-based email address extractor / verifier</description>
 	<url>https://github.com/bbottema/email-rfc2822-validator</url>
 

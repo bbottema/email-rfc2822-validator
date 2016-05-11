@@ -16,7 +16,7 @@ email-rfc2822-validator is available in Maven Central:
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -41,6 +41,6 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_D
 
 ### Latest Progress ###
 
-v1.0.0
+v1.0.1
 
 Initial release
