@@ -107,13 +107,26 @@ public final class EmailAddressValidator {
 	}
 
 	/**
+	 * Validates an e-mail with default validation flags. The default setting is not strictly 2822 compliant. For example, it does not include the {@link
+	 * EmailAddressCriteria#ALLOW_DOMAIN_LITERALS} criteria, which results in exclusions on single domains. Useful for cleaning up email strings that other
+	 * middleware (ie. the next server) will be able to understand.
+	 *
+	 * @param email A string representing an email address.
+	 * @return Whether the e-mail address is a valid address excluding the more exotic formats.
+	 * @see EmailAddressCriteria#DEFAULT
+	 */
+	public static boolean isValid(final String email) {
+		return isValid(email, EmailAddressCriteria.DEFAULT);
+	}
+
+	/**
 	 * Validates an e-mail with default validation flags that remains <code>true</code> to RFC 2822.
 	 *
-	 * @param email A string representing an email addres.
+	 * @param email A string representing an email address.
 	 * @return Whether the e-mail address is compliant with RFC 2822.
 	 * @see EmailAddressCriteria#RFC_COMPLIANT
 	 */
-	public static boolean isValid(final String email) {
+	public static boolean isValidStrict(final String email) {
 		return isValid(email, EmailAddressCriteria.RFC_COMPLIANT);
 	}
 
