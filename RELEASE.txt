@@ -3,10 +3,18 @@ https://github.com/bbottema/email-rfc2822-validator/
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 
 RELEASE NOTES email-rfc2822-validator
+
+v1.1.0
+
+- #7: Clarified validation modes (default vs strictly rfc compliant)
+
+NOTE: EmailAddressValidator.isValid() now validates using EmailAddressCriteria.DEFAULT rather than EmailAddressCriteria.RFC_COMPLIANT. Use
+EmailAddressValidator.isValidStrict() for RFC compliant validation.
+
 
 v1.0.1
 

@@ -16,7 +16,7 @@ email-rfc2822-validator is available in Maven Central:
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -40,6 +40,14 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_D
 
 
 ### Latest Progress ###
+
+v1.1.0
+
+- [#7](https://github.com/bbottema/email-rfc2822-validator/issues/7): Clarified validation modes (default vs strictly rfc compliant)
+
+**NOTE**: EmailAddressValidator.isValid() now validates using EmailAddressCriteria.DEFAULT rather than EmailAddressCriteria.RFC_COMPLIANT. Use
+EmailAddressValidator.isValidStrict() for RFC compliant validation.
+
 
 v1.0.1
 
