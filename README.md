@@ -20,6 +20,22 @@ email-rfc2822-validator is available in Maven Central:
 </dependency>
 ```
 
+And just to show you that this stuff is hard, here's JavaMail's [official parser's](https://searchcode.com/codesearch/view/63668224/) javadoc on the subject (line 669):
+
+```
+    /*
+     * RFC822 Address parser.
+     *
+     * XXX - This is complex enough that it ought to be a real parser,
+     *       not this ad-hoc mess, and because of that, this is not perfect.
+     *
+     * XXX - Deal with encoded Headers too.
+     */
+    @SuppressWarnings("fallthrough")
+    private static InternetAddress[] parse(String s, boolean strict,
+				    boolean parseHdr) throws AddressException {
+```
+
 ## Usage
 
 There are two classes available, EmailaddressValidator and EmailAddressParser. The second is used to extract data from (complex / mangled) email strings.
