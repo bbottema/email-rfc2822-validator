@@ -2,6 +2,7 @@ package demo;
 
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator;
+import org.hazlewood.connor.bottema.emailaddress.EmailAddressParser;
 
 public class TestClass {
 	/* quick test some email addresses
@@ -26,6 +27,11 @@ public class TestClass {
 		assertEmail("me@example..com", false);
 		assertEmail("me\\@example.com", false);
 
+		assertEmail("\"ßoµ\" <notifications@example.com>", false);
+
+		assertParseable("\"ßoµ\" <notifications@example.com>", false);
+		assertParseable("\"ßoµ\" <notifications@example.com>".replaceAll("[^\\x00-\\x7F]", ""), true);
+
 		System.out.println("yay, validations successful!");
 	}
 
@@ -35,4 +41,16 @@ public class TestClass {
 			throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, isValid));
 		}
 	}
+
+	private static void assertParseable(String emailaddress, boolean expected) {
+		String [] parts = EmailAddressParser.getAddressParts(emailaddress, EmailAddressCriteria.RFC_COMPLIANT, false);
+		if (parts == null || parts.length <= 0) {
+			if (expected) throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, false));
+			else return;
+		}
+
+		if (!expected)
+			throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, true));
+	}
+
 }
