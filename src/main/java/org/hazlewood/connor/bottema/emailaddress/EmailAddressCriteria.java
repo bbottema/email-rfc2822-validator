@@ -19,7 +19,7 @@ import java.util.EnumSet;
  * 			everything strict, since what most people consider a "valid" email address is a drastic subset of 2822. For users with the strictest requirements,
  * 			this library may not be enough, since although it checks most of RFC 2822, it might still be too 'tolerant' for their needs (on the other side of
  * 			the spectrum, most libraries use a simple blah@blah.blah.com type regex, which as we of course know is
- * 			<a href="http://www.troyhunt.com/2013/11/dont-trust-net-web-forms-email-regex.html">rarely a good idea</a>)
+ * 			<a href="http://www.troyhunt.com/2013/11/dont-trust-net-web-forms-email-regex.html">rarely a good idea</a>.)
  * 		</li>
  * 		<li>
  * 		    User wants to intelligently parse a possibly-ugly address with the goal being a cleaned up usable address that other software
