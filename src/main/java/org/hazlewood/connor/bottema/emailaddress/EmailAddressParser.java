@@ -1,6 +1,5 @@
 package org.hazlewood.connor.bottema.emailaddress;
 
-import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -49,8 +48,9 @@ public final class EmailAddressParser {
 	 * path or one with only CFWS inside the brackets (which is legit, as demonstated above). Note that you can also simply call getReturnPathAddress() to have
 	 * that operation done for you. <P>Note that &lt;&quot;&quot;&gt; is <b>not</b> a valid return-path.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public static boolean isValidReturnPath(String email, EnumSet<EmailAddressCriteria> criteria) {
-		return (email != null) && Dragons.fromCriteria(criteria).RETURN_PATH_PATTERN.matcher(email).matches();
+		return email != null && Dragons.fromCriteria(criteria).RETURN_PATH_PATTERN.matcher(email).matches();
 	}
 
 	/**
@@ -64,14 +64,10 @@ public final class EmailAddressParser {
 	 */
 	public static String getReturnPathBracketContents(String email, EnumSet<EmailAddressCriteria> criteria) {
 		if (email == null) {
-			return (null);
+			return null;
 		}
 		Matcher m = Dragons.fromCriteria(criteria).RETURN_PATH_PATTERN.matcher(email);
-		if (m.matches()) {
-			return (m.group(1));
-		} else {
-			return (null);
-		}
+		return m.matches() ? m.group(1) : null;
 	}
 
 	/**
@@ -82,21 +78,12 @@ public final class EmailAddressParser {
 	 * brackets, with quotes stripped where possible, etc. (may return an empty string).
 	 */
 	public static String getReturnPathAddress(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
-		if (email == null) {
-			return (null);
+		if (!isValidReturnPath(email, criteria)) {
+			return null;
 		}
-		// inefficient, but there is no parallel grammar tree to extract the return path
-		// accurately:
-		if (isValidReturnPath(email, criteria)) {
-			InternetAddress ia = getInternetAddress(email, criteria, extractCfwsPersonalNames);
-			if (ia == null) {
-				return ("");
-			} else {
-				return (ia.getAddress());
-			}
-		} else {
-			return (null);
-		}
+		// inefficient, but there is no parallel grammar tree to extract the return path accurately:
+		InternetAddressSimplified ia = getInternetAddress(email, criteria, extractCfwsPersonalNames);
+		return ia == null ? "" : ia.getAddress();
 	}
 
 	/**
@@ -111,7 +98,7 @@ public final class EmailAddressParser {
 	 * @see #isValidAddressList(String, EnumSet)
 	 */
 	public static boolean isValidMailboxList(String header_txt, EnumSet<EmailAddressCriteria> criteria) {
-		return (Dragons.fromCriteria(criteria).MAILBOX_LIST_PATTERN.matcher(header_txt).matches());
+		return Dragons.fromCriteria(criteria).MAILBOX_LIST_PATTERN.matcher(header_txt).matches();
 	}
 
 	/**
@@ -127,27 +114,20 @@ public final class EmailAddressParser {
 	 */
 	public static boolean isValidAddressList(String header_txt, EnumSet<EmailAddressCriteria> criteria) {
 		// creating the actual ADDRESS_LIST_PATTERN string proved too large for java, but
-		// forutnately we can use this alternative FSM to check. Since the address pattern
-		// is greedy, it will match all CFWS up to the comma which we can then require easily.
-		boolean valid = false;
-		Matcher m = Dragons.fromCriteria(criteria).ADDRESS_PATTERN.matcher(header_txt);
-		int max = header_txt.length();
+		// fortunately we can use this alternative FSM to check. Since the address pattern
+		// is ugreedy, it will match all CFWS up to the comma which we can then require easily.
+		final Matcher m = Dragons.fromCriteria(criteria).ADDRESS_PATTERN.matcher(header_txt);
+		final int max = header_txt.length();
 		while (m.lookingAt()) {
 			if (m.end() == max) {
-				valid = true;
-				break;
+				return true;
+			} else if (header_txt.charAt(m.end()) == ',') {
+				m.region(m.end() + 1, max);
 			} else {
-				valid = false;
-				if (header_txt.charAt(m.end()) == ',') {
-					m.region(m.end() + 1, max);
-					continue;
-				} else {
-					break;
-				}
+				return false;
 			}
 		}
-		return (valid);
-		// return(ADDRESS_LIST_PATTERN.matcher(header_txt).matches());
+		return false;
 	}
 
 	/**
@@ -193,16 +173,13 @@ public final class EmailAddressParser {
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
-	public static InternetAddress getInternetAddress(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@SuppressWarnings("WeakerAccess")
+	public static InternetAddressSimplified getInternetAddress(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
-			return (null);
+			return null;
 		}
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
-		if (m.matches()) {
-			return (pullFromGroups(m, criteria, extractCfwsPersonalNames));
-		} else {
-			return (null);
-		}
+		return m.matches() ? pullFromGroups(m, criteria, extractCfwsPersonalNames) : null;
 	}
 
 	/**
@@ -223,14 +200,10 @@ public final class EmailAddressParser {
 	 */
 	public static String[] getAddressParts(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
-			return (null);
+			return null;
 		}
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
-		if (m.matches()) {
-			return (getMatcherParts(m, criteria, extractCfwsPersonalNames));
-		} else {
-			return (null);
-		}
+		return m.matches() ? getMatcherParts(m, criteria, extractCfwsPersonalNames) : null;
 	}
 
 	/**
@@ -243,14 +216,10 @@ public final class EmailAddressParser {
 	 */
 	public static String getPersonalName(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
-			return (null);
+			return null;
 		}
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
-		if (m.matches()) {
-			return (getMatcherParts(m, criteria, extractCfwsPersonalNames)[0]);
-		} else {
-			return (null);
-		}
+		return m.matches() ? getMatcherParts(m, criteria, extractCfwsPersonalNames)[0] : null;
 	}
 
 	/**
@@ -262,14 +231,10 @@ public final class EmailAddressParser {
 	 */
 	public static String getLocalPart(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
-			return (null);
+			return null;
 		}
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
-		if (m.matches()) {
-			return (getMatcherParts(m, criteria, extractCfwsPersonalNames)[1]);
-		} else {
-			return (null);
-		}
+		return m.matches() ? getMatcherParts(m, criteria, extractCfwsPersonalNames)[1] : null;
 	}
 
 	/**
@@ -280,14 +245,10 @@ public final class EmailAddressParser {
 	 */
 	public static String getDomain(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
-			return (null);
+			return null;
 		}
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
-		if (m.matches()) {
-			return (getMatcherParts(m, criteria, extractCfwsPersonalNames)[2]);
-		} else {
-			return (null);
-		}
+		return m.matches() ? getMatcherParts(m, criteria, extractCfwsPersonalNames)[2] : null;
 	}
 
 	/**
@@ -318,22 +279,21 @@ public final class EmailAddressParser {
 	 * emails set correctly (i.e. doesn't rely on InternetAddress parsing for extraction, but does require that the address be usable by InternetAddress,
 	 * although re-parsing with InternetAddress may cause exceptions, see getInternetAddress()); will not return null.
 	 */
-	public static InternetAddress[] extractHeaderAddresses(String header_txt, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	public static InternetAddressSimplified[] extractHeaderAddresses(String header_txt, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		// you may go insane from this code
 		if (header_txt == null || header_txt.equals("")) {
-			return (new InternetAddress[0]);
+			return new InternetAddressSimplified[0];
 		}
 		// optimize: separate method or boolean to indicate if group should be worried about at all
-		Dragons dragons = Dragons.fromCriteria(criteria);
-		Matcher m = dragons.MAILBOX_PATTERN.matcher(header_txt);
-		Matcher gp = dragons.GROUP_PREFIX_PATTERN.matcher(header_txt);
-		ArrayList<InternetAddress> result = new ArrayList<InternetAddress>(1);
-		int max = header_txt.length();
-		InternetAddress cur_addr;
+		final Dragons dragons = Dragons.fromCriteria(criteria);
+		final Matcher m = dragons.MAILBOX_PATTERN.matcher(header_txt);
+		final Matcher gp = dragons.GROUP_PREFIX_PATTERN.matcher(header_txt);
+		final ArrayList<InternetAddressSimplified> result = new ArrayList<InternetAddressSimplified>(1);
+		final int max = header_txt.length();
 		boolean group_start = false;
 		boolean group_end = false;
-		int next_comma_index = -1;
-		int next_semicolon_index = -1;
+		int next_comma_index;
+		int next_semicolon_index;
 		int just_after_group_end = -1;
 		// skip past any group prefixes, gobble addresses as usual in a list but
 		// skip past the terminating semicolon
@@ -366,8 +326,8 @@ public final class EmailAddressParser {
 				group_start = false;
 				// must test m.end() == max first with early exit
 				if (m.end() == max || header_txt.charAt(m.end()) == ',' ||
-						(group_end = (header_txt.charAt(m.end()) == ';'))) {
-					cur_addr = pullFromGroups(m, criteria, extractCfwsPersonalNames);
+						(group_end = header_txt.charAt(m.end()) == ';')) {
+					InternetAddressSimplified cur_addr = pullFromGroups(m, criteria, extractCfwsPersonalNames);
 					if (cur_addr != null) {
 						result.add(cur_addr);
 					}
@@ -406,13 +366,11 @@ public final class EmailAddressParser {
 				group_start = false;
 				group_end = true;
 				just_after_group_end = m.regionStart();
-			} else if (group_end) {
-				continue;
-			} else {
+			} else if (!group_end) {
 				break;
 			}
 		}
-		return (result.size() > 0 ? result.toArray(new InternetAddress[result.size()]) : new InternetAddress[0]);
+		return result.size() > 0 ? result.toArray(new InternetAddressSimplified[0]) : new InternetAddressSimplified[0];
 	}
 
 	/**
@@ -433,35 +391,22 @@ public final class EmailAddressParser {
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
-	public static InternetAddress pullFromGroups(Matcher m, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
-		InternetAddress current_ia = null;
-		String[] parts = getMatcherParts(m, criteria, extractCfwsPersonalNames);
-		if (parts[1] == null || parts[2] == null) {
-			return (null);
+	@SuppressWarnings("WeakerAccess")
+	public static InternetAddressSimplified pullFromGroups(Matcher m, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+		final String[] parts = getMatcherParts(m, criteria, extractCfwsPersonalNames);
+		if (parts[1] != null && parts[2] != null) {
+			// if for some reason you want to require that the result be re-parsable by InternetAddress,
+			// you could uncomment the appropriate stuff below, but note that not all the utility functions
+			// use pullFromGroups; some call getMatcherParts directly.
+			try {
+				// current_ia = new InternetAddress(parts[0] + " <" + parts[1] + "@" + parts[2]+ ">", true);
+				// so it parses it OK, but since javamail doesn't extract too well we make sure that the consituent parts are correct
+				return new InternetAddressSimplified(parts[0], parts[1] + "@" + parts[2]);
+			} catch (UnsupportedEncodingException uee) {
+				// ignore
+			}
 		}
-		// if for some reason you want to require that the result be re-parsable by
-		// InternetAddress, you
-		// could uncomment the appropriate stuff below, but note that not all the utility
-		// functions use pullFromGroups; some call getMatcherParts directly.
-		try {
-			//current_ia = new InternetAddress(parts[0] + " <" + parts[1] + "@" +
-			//                                 parts[2]+ ">", true);
-			// so it parses it OK, but since javamail doesn't extract too well
-			// we make sure that the consituent parts
-			// are correct
-			current_ia = new InternetAddress();
-			current_ia.setPersonal(parts[0]);
-			current_ia.setAddress(parts[1] + "@" + parts[2]);
-		}
-		//catch (AddressException ae)
-		//        {
-		//System.out.println("ex: " + ae);
-		//            current_ia = null;
-		//        }
-		catch (UnsupportedEncodingException uee) {
-			current_ia = null;
-		}
-		return (current_ia);
+		return null;
 	}
 
 	/**
@@ -470,6 +415,7 @@ public final class EmailAddressParser {
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 * @return will not return null
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public static String[] getMatcherParts(Matcher m, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		String current_localpart = null;
 		String current_domainpart = null;
@@ -493,8 +439,8 @@ public final class EmailAddressParser {
 					if (domain_part_da == null) {
 						domain_part_dl = m.group(8);
 					}
-					current_localpart = (local_part_da == null ? local_part_qs : local_part_da);
-					current_domainpart = (domain_part_da == null ? domain_part_dl : domain_part_da);
+					current_localpart = local_part_da == null ? local_part_qs : local_part_da;
+					current_domainpart = domain_part_da == null ? domain_part_dl : domain_part_da;
 					personal_string = m.group(2);
 					if (personal_string == null && extractCfwsPersonalNames) {
 						personal_string = m.group(9);
@@ -510,8 +456,8 @@ public final class EmailAddressParser {
 					if (domain_part_da == null) {
 						domain_part_dl = m.group(15);
 					}
-					current_localpart = (local_part_da == null ? local_part_qs : local_part_da);
-					current_domainpart = (domain_part_da == null ? domain_part_dl : domain_part_da);
+					current_localpart = local_part_da == null ? local_part_qs : local_part_da;
+					current_domainpart = domain_part_da == null ? domain_part_dl : domain_part_da;
 					if (extractCfwsPersonalNames) {
 						personal_string = m.group(16);
 						personal_string = removeAnyBounding('(', ')', getFirstComment(personal_string, criteria));
@@ -525,7 +471,7 @@ public final class EmailAddressParser {
 					if (local_part_da == null) {
 						local_part_qs = m.group(6);
 					}
-					current_localpart = (local_part_da == null ? local_part_qs : local_part_da);
+					current_localpart = local_part_da == null ? local_part_qs : local_part_da;
 					current_domainpart = m.group(7);
 					personal_string = m.group(2);
 					if (personal_string == null && extractCfwsPersonalNames) {
@@ -538,7 +484,7 @@ public final class EmailAddressParser {
 					if (local_part_da == null) {
 						local_part_qs = m.group(12);
 					}
-					current_localpart = (local_part_da == null ? local_part_qs : local_part_da);
+					current_localpart = local_part_da == null ? local_part_qs : local_part_da;
 					current_domainpart = m.group(13);
 					if (extractCfwsPersonalNames) {
 						personal_string = m.group(14);
@@ -556,8 +502,8 @@ public final class EmailAddressParser {
 			if (domain_part_da == null && allowDomainLiterals) {
 				domain_part_dl = m.group(6);
 			}
-			current_localpart = (local_part_da == null ? local_part_qs : local_part_da);
-			current_domainpart = (domain_part_da == null ? domain_part_dl : domain_part_da);
+			current_localpart = local_part_da == null ? local_part_qs : local_part_da;
+			current_domainpart = domain_part_da == null ? domain_part_dl : domain_part_da;
 			if (extractCfwsPersonalNames) {
 				personal_string = m.group((allowDomainLiterals ? 1 : 0) + 6);
 				personal_string = removeAnyBounding('(', ')', getFirstComment(personal_string, criteria));
@@ -581,7 +527,7 @@ public final class EmailAddressParser {
 		if (Dragons.fromCriteria(criteria).ADDR_SPEC_PATTERN.matcher(test_addr).matches()) {
 			current_localpart = removeAnyBounding('"', '"', current_localpart);
 		}
-		return (new String[] { personal_string, current_localpart, current_domainpart });
+		return new String[] { personal_string, current_localpart, current_domainpart };
 	}
 
 	/**
@@ -592,15 +538,16 @@ public final class EmailAddressParser {
 	 * Note for future improvement: if COMMENT_PATTERN could handle nested comments, then this should be able to as well, but if this method were to be used to
 	 * find the CFWS personal name (see boolean option) then such a nested comment would probably not be the one you were looking for?
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public static String getFirstComment(String text, EnumSet<EmailAddressCriteria> criteria) {
 		if (text == null) {
-			return (null); // important
+			return null; // important
 		}
 		Matcher m = Dragons.fromCriteria(criteria).COMMENT_PATTERN.matcher(text);
 		if (!m.find()) {
-			return (null);
+			return null;
 		}
-		return (m.group().trim()); // trim important
+		return m.group().trim(); // trim important
 	}
 
 	/**
@@ -610,6 +557,7 @@ public final class EmailAddressParser {
 	 * result (if there are no embedded escaped characters) or the proper one-level-quoting result (if there are embedded escaped characters). If the string is
 	 * anything else, this just returns it unadulterated.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public static String cleanupPersonalString(String string, EnumSet<EmailAddressCriteria> criteria) {
 		if (string == null) {
 			return null;
@@ -618,25 +566,20 @@ public final class EmailAddressParser {
 		final Dragons dragons = Dragons.fromCriteria(criteria);
 		Matcher m = dragons.QUOTED_STRING_WO_CFWS_PATTERN.matcher(text);
 		if (!m.matches()) {
-			return (text);
+			return text;
 		}
 		text = removeAnyBounding('"', '"', m.group());
 		text = dragons.ESCAPED_BSLASH_PATTERN.matcher(text).replaceAll("\\\\");
 		text = dragons.ESCAPED_QUOTE_PATTERN.matcher(text).replaceAll("\"");
-		return (text.trim());
+		return text.trim();
 	}
 
 	/**
 	 * If the string starts and ends with s and e, remove them, otherwise return the string as it was passed in.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public static String removeAnyBounding(char s, char e, String str) {
-		if (str == null || str.length() < 2) {
-			return (str);
-		}
-		if (str.startsWith(String.valueOf(s)) && str.endsWith(String.valueOf(e))) {
-			return (str.substring(1, str.length() - 1));
-		} else {
-			return (str);
-		}
+		boolean valueStartsEndsWithSAndE = str != null && str.length() >= 2 && str.startsWith(String.valueOf(s)) && str.endsWith(String.valueOf(e));
+		return valueStartsEndsWithSAndE ? str.substring(1, str.length() - 1) : str;
 	}
 }

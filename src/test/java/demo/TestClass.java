@@ -1,15 +1,19 @@
 package demo;
 
-import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
-import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressParser;
+import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.RFC_COMPLIANT;
 
 public class TestClass {
 	/* quick test some email addresses
 	 * </p>
 	 * lists taken from: http://stackoverflow.com/a/297494/441662 and http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx/
 	 */
-	public static void main(String[] args) {
+	@Test
+	public void testEmailAddresses() {
 		assertEmail("me@example.com", true);
 		assertEmail("a.nonymous@example.com", true);
 		assertEmail("name+tag@example.com", true);
@@ -19,38 +23,24 @@ public class TestClass {
 		assertEmail("me.example@com", true);
 		assertEmail("309d4696df38ff12c023600e3bc2bd4b@fakedomain.com", true);
 		assertEmail("ewiuhdghiufduhdvjhbajbkerwukhgjhvxbhvbsejskuadukfhgskjebf@gmail.net", true);
-
+		
 		assertEmail("NotAnEmail", false);
 		assertEmail("me@", false);
 		assertEmail("@example.com", false);
 		assertEmail(".me@example.com", false);
 		assertEmail("me@example..com", false);
 		assertEmail("me\\@example.com", false);
-
+		
 		assertEmail("\"ßoµ\" <notifications@example.com>", false);
-
-		assertParseable("\"ßoµ\" <notifications@example.com>", false);
-		assertParseable("\"ßoµ\" <notifications@example.com>".replaceAll("[^\\x00-\\x7F]", ""), true);
-
-		System.out.println("yay, validations successful!");
+		assertThat(EmailAddressParser.getAddressParts("\"ßoµ\" <notifications@example.com>", RFC_COMPLIANT, false)).isNullOrEmpty();
+		String emailaddress = "\"ßoµ\" <notifications@example.com>".replaceAll("[^\\x00-\\x7F]", "");
+		assertThat(EmailAddressParser.getAddressParts(emailaddress, RFC_COMPLIANT, false)).isNotEmpty();
 	}
-
+	
 	private static void assertEmail(String emailaddress, boolean expected) {
-		final boolean isValid = EmailAddressValidator.isValid(emailaddress, EmailAddressCriteria.RFC_COMPLIANT);
-		if (isValid != expected) {
-			throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, isValid));
-		}
+		assertThat(EmailAddressValidator.isValid(emailaddress, RFC_COMPLIANT))
+				.as("assert %s is a valid address", emailaddress)
+				.isEqualTo(expected);
 	}
-
-	private static void assertParseable(String emailaddress, boolean expected) {
-		String [] parts = EmailAddressParser.getAddressParts(emailaddress, EmailAddressCriteria.RFC_COMPLIANT, false);
-		if (parts == null || parts.length <= 0) {
-			if (expected) throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, false));
-			else return;
-		}
-
-		if (!expected)
-			throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, true));
-	}
-
+	
 }

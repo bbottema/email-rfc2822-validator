@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static java.lang.String.format;
+
 /**
  * MY DRAGONS WILL EAT YOUR DRAGONS
  * <p/>
@@ -50,6 +52,7 @@ final class Dragons {
 	/**
 	 * @return Dragons based on criteria, cached if the criteria have been used before
 	 */
+	@SuppressWarnings("WeakerAccess")
 	protected static Dragons fromCriteria(EnumSet<EmailAddressCriteria> criteria) {
 		if (!cache.containsKey(criteria)) {
 			cache.put(criteria, new Dragons(criteria));
@@ -64,10 +67,10 @@ final class Dragons {
 		// RFC 2822 2.2.2 Structured Header Field Bodies
 		final String crlf = "\\r\\n";
 		final String wsp = "[ \\t]"; //space or tab
-		final String fwsp = "(?:" + wsp + "*" + crlf + ")?" + wsp + "+";
+		final String fwsp = format("(?:%s*%s)?%s+", wsp, crlf, wsp);
 
 		//RFC 2822 3.2.1 Primitive tokens
-		final String dquote = "\\\"";
+		final String dquote = "\"";
 		//ASCII Control characters excluding white space:
 		final String noWsCtl = "\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F";
 		//all ASCII characters except CR and LF:
@@ -75,74 +78,76 @@ final class Dragons {
 
 		// RFC 2822 3.2.2 Quoted characters:
 		//single backslash followed by a text char
-		final String quotedPair = "(?:\\\\" + asciiText + ")";
+		final String quotedPair = format("(?:\\\\%s)", asciiText);
 
 		// RFC 2822 3.2.3 CFWS specification
 		// note: nesting should be permitted but is not by these rules given code limitations:
 
 		// rewritten to be shorter:
 		//final String ctext = "[" + noWsCtl + "\\x21-\\x27\\x2A-\\x5B\\x5D-\\x7E]";
-		final String ctext = "[" + noWsCtl + "\\!-\\'\\*-\\[\\]-\\~]";
-		final String ccontent = ctext + "|" + quotedPair; // + "|" + comment;
-		final String comment = "\\((?:(?:" + fwsp + ")?" + ccontent + ")*(?:" + fwsp + ")?\\)";
-		final String cfws = "(?:(?:" + fwsp + ")?" + comment + ")*(?:(?:(?:" + fwsp + ")?" + comment + ")|(?:" + fwsp + "))";
+		final String ctext = format("[%s!-'*-\\[\\]-~]", noWsCtl);
+		final String ccontent = format("%s|%s", ctext, quotedPair); // + "|" + comment;
+		final String comment = format("\\((?:(?:%s)?%s)*(?:%s)?\\)", fwsp, ccontent, fwsp);
+		final String cfws = format("(?:(?:%s)?%s)*(?:(?:(?:%s)?%s)|(?:%s))", fwsp, comment, fwsp, comment, fwsp);
 
 		//RFC 2822 3.2.4 Atom:
-
-		final String atext = "[a-zA-Z0-9\\!\\#-\\'\\*\\+\\-\\/\\=\\?\\^-\\`\\{-\\~" + (criteria.contains(EmailAddressCriteria.ALLOW_DOT_IN_A_TEXT) ? "\\." : "") + (criteria
-				.contains(EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT) ? "\\[\\]" : "") + "]";
+		
+		final String atext = format("[a-zA-Z0-9!#-'*+\\-/=?^-`{-~%s%s]",
+				criteria.contains(EmailAddressCriteria.ALLOW_DOT_IN_A_TEXT) ? "." : "",
+				criteria.contains(EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT) ? "\\[]" : "");
 		// regular atext is same as atext but has no . or [ or ] allowed, no matter the class prefs, to prevent
 		// long recursions on e.g. "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t"
-		final String regularAtext = "[a-zA-Z0-9\\!\\#-\\'\\*\\+\\-\\/\\=\\?\\^-\\`\\{-\\~]";
+		final String regularAtext = "[a-zA-Z0-9!#-'*+\\-/=?^-`{-~]";
 
-		final String atom = "(?:" + cfws + ")?" + atext + "+" + "(?:" + cfws + ")?";
-		final String dotAtomText = regularAtext + "+" + "(?:" + "\\." + regularAtext + "+)*";
-//		final String dotAtom = "(?:" + cfws + ")?" + dotAtomText + "(?:" + cfws + ")?";
-		final String capDotAtomNoCFWS = "(?:" + cfws + ")?(" + dotAtomText + ")(?:" + cfws + ")?";
-		final String capDotAtomTrailingCFWS = "(?:" + cfws + ")?(" + dotAtomText + ")(" + cfws + ")?";
+		final String atom = format("(?:%s)?%s+(?:%s)?", cfws, atext, cfws);
+		final String dotAtomText = format("%s+(?:\\.%s+)*", regularAtext, regularAtext);
+//		final String dotAtom = format("(?:%s)?%s(?:%s)?", cfws, dotAtomText, cfws);
+		final String capDotAtomNoCFWS = format("(?:%s)?(%s)(?:%s)?", cfws, dotAtomText, cfws);
+		final String capDotAtomTrailingCFWS = format("(?:%s)?(%s)(%s)?", cfws, dotAtomText, cfws);
 
 		//RFC 2822 3.2.5 Quoted strings:
 		//noWsCtl and the rest of ASCII except the doublequote and backslash characters:
 
-		final String qtext = "[" + noWsCtl + "\\!\\#-\\[\\]-\\~]";
-		final String localPartqtext = "[" + noWsCtl + (criteria.contains(EmailAddressCriteria.ALLOW_PARENS_IN_LOCALPART) ? "\\!\\#-\\[\\]-\\~]" : "\\!\\#-\\'\\*-\\[\\]-\\~]");
+		final String qtext = format("[%s!#-\\[\\]-~]", noWsCtl);
+		final String localPartqtext = format("[%s%s", noWsCtl,
+				criteria.contains(EmailAddressCriteria.ALLOW_PARENS_IN_LOCALPART) ? "!#-\\[\\]-~]" : "!#-'\\*-\\[]-~]");
 
-		final String qcontent = "(?:" + qtext + "|" + quotedPair + ")";
-		final String localPartqcontent = "(?>" + localPartqtext + "|" + quotedPair + ")";
-		final String quotedStringWOCFWS = dquote + "(?>(?:" + fwsp + ")?" + qcontent + ")*(?:" + fwsp + ")?" + dquote;
-		final String quotedString = "(?:" + cfws + ")?" + quotedStringWOCFWS + "(?:" + cfws + ")?";
-		final String localPartQuotedString =
-				"(?:" + cfws + ")?(" + dquote + "(?:(?:" + fwsp + ")?" + localPartqcontent + ")*(?:" + fwsp + ")?" + dquote + ")(?:" + cfws + ")?";
+		final String qcontent = format("(?:%s|%s)", qtext, quotedPair);
+		final String localPartqcontent = format("(?>%s|%s)", localPartqtext, quotedPair);
+		final String quotedStringWOCFWS = format("%s(?>(?:%s)?%s)*(?:%s)?%s", dquote, fwsp, qcontent, fwsp, dquote);
+		final String quotedString = format("(?:%s)?%s(?:%s)?", cfws, quotedStringWOCFWS, cfws);
+		final String localPartQuotedString = format("(?:%s)?(%s(?:(?:%s)?%s)*(?:%s)?%s)(?:%s)?",
+				cfws, dquote, fwsp, localPartqcontent, fwsp, dquote, cfws);
 
 		//RFC 2822 3.2.6 Miscellaneous tokens
-		final String word = "(?:(?:" + atom + ")|(?:" + quotedString + "))";
+		final String word = format("(?:(?:%s)|(?:%s))", atom, quotedString);
 		// by 2822: phrase = 1*word / obs-phrase
 		// implemented here as: phrase = word (FWS word)*
 		// so that aaaa can't be four words, which can cause tons of recursive backtracking
 		//final String phrase = "(?:" + word + "+?)"; //one or more words
-		final String phrase = word + "(?:(?:" + fwsp + ")" + word + ")*";
+		final String phrase = format("%s(?:(?:%s)%s)*", word, fwsp, word);
 
 		//RFC 1035 tokens for domain names:
 		final String letter = "[a-zA-Z]";
 		final String letDig = "[a-zA-Z0-9]";
 		final String letDigHyp = "[a-zA-Z0-9-]";
-		final String rfcLabel = letDig + "(?:" + letDigHyp + "{0,61}" + letDig + ")?";
-		final String rfc1035DomainName = rfcLabel + "(?:\\." + rfcLabel + ")*\\." + letter + "{2,6}";
+		final String rfcLabel = format("%s(?:%s{0,61}%s)?", letDig, letDigHyp, letDig);
+		final String rfc1035DomainName = format("%s(?:\\.%s)*\\.%s{2,6}", rfcLabel, rfcLabel, letter);
 
 		//RFC 2822 3.4 Address specification
 		//domain text - non white space controls and the rest of ASCII chars not
 		// including [, ], or \:
 		// rewritten to save space:
 		//final String dtext = "[" + noWsCtl + "\\x21-\\x5A\\x5E-\\x7E]";
-		final String dtext = "[" + noWsCtl + "\\!-Z\\^-\\~]";
+		final String dtext = format("[%s!-Z^-~]", noWsCtl);
 
-		final String dcontent = dtext + "|" + quotedPair;
+		final String dcontent = format("%s|%s", dtext, quotedPair);
 		final String capDomainLiteralNoCFWS =
-				"(?:" + cfws + ")?" + "(\\[" + "(?:(?:" + fwsp + ")?(?:" + dcontent + ")+)*(?:" + fwsp + ")?\\])" + "(?:" + cfws + ")?";
+				format("(?:%s)?(\\[(?:(?:%s)?(?:%s)+)*(?:%s)?])(?:%s)?", cfws, fwsp, dcontent, fwsp, cfws);
 		final String capDomainLiteralTrailingCFWS =
-				"(?:" + cfws + ")?" + "(\\[" + "(?:(?:" + fwsp + ")?(?:" + dcontent + ")+)*(?:" + fwsp + ")?\\])" + "(" + cfws + ")?";
-		final String rfc2822Domain = "(?:" + capDotAtomNoCFWS + "|" + capDomainLiteralNoCFWS + ")";
-		final String capCFWSRfc2822Domain = "(?:" + capDotAtomTrailingCFWS + "|" + capDomainLiteralTrailingCFWS + ")";
+				format("(?:%s)?(\\[(?:(?:%s)?(?:%s)+)*(?:%s)?])(%s)?", cfws, fwsp, dcontent, fwsp, cfws);
+		final String rfc2822Domain = format("(?:%s|%s)", capDotAtomNoCFWS, capDomainLiteralNoCFWS);
+		final String capCFWSRfc2822Domain = format("(?:%s|%s)", capDotAtomTrailingCFWS, capDomainLiteralTrailingCFWS);
 
 		// Les chose to implement the more-strict 1035 instead of just relying on "dot-atom"
 		// as would be implied by 2822 without the domain-literal token. The issue is that 2822
@@ -152,32 +157,34 @@ final class Dragons {
 		// final String domain =
 		//    ALLOW_DOMAIN_LITERALS ? rfc2822Domain : rfc1035DomainName;
 		final String domain = criteria.contains(EmailAddressCriteria.ALLOW_DOMAIN_LITERALS) ? rfc2822Domain : "(?:" + cfws + ")?(" + rfc1035DomainName + ")(?:" + cfws + ")?";
-		final String capCFWSDomain = criteria.contains(EmailAddressCriteria.ALLOW_DOMAIN_LITERALS) ?
-				capCFWSRfc2822Domain :
-				"(?:" + cfws + ")?(" + rfc1035DomainName + ")(" + cfws + ")?";
-		final String localPart = "(" + capDotAtomNoCFWS + "|" + localPartQuotedString + ")";
+		final String capCFWSDomain = criteria.contains(EmailAddressCriteria.ALLOW_DOMAIN_LITERALS)
+				? capCFWSRfc2822Domain
+				: format("(?:%s)?(%s)(%s)?", cfws, rfc1035DomainName, cfws);
+		final String localPart = format("(%s|%s)", capDotAtomNoCFWS, localPartQuotedString);
 		// uniqueAddrSpec exists so we can have a duplicate tree that has a capturing group
 		// instead of a non-capturing group for the trailing CFWS after the domain token
 		// that we wouldn't want if it was inside
 		// an angleAddr. The matching should be otherwise identical.
-		final String addrSpec = localPart + "@" + domain;
+		final String addrSpec = format("%s@%s", localPart, domain);
 		final String uniqueAddrSpec = localPart + "@" + capCFWSDomain;
-		final String angleAddr = "(?:" + cfws + ")?<" + addrSpec + ">(" + cfws + ")?";
+		final String angleAddr = format("(?:%s)?<%s>(%s)?", cfws, addrSpec, cfws);
 		// uses a reluctant quantifier to skip ahead and make sure there's actually an
 		// address in there somewhere... hmmm, maybe regex in java doesn't optimize that
 		// case by skipping over it at the start by default? Doesn't seem to solve the
 		// issue of recursion on long strings like [A-Za-z], but issue was solved by
 		// changing phrase definition (see above):
-		final String nameAddr = "(" + phrase + ")??(" + angleAddr + ")";
-		final String mailbox = (criteria.contains(EmailAddressCriteria.ALLOW_QUOTED_IDENTIFIERS) ? "(" + nameAddr + ")|" : "") + "(" + uniqueAddrSpec + ")";
+		final String nameAddr = format("(%s)??(%s)", phrase, angleAddr);
+		final String mailboxName = criteria.contains(EmailAddressCriteria.ALLOW_QUOTED_IDENTIFIERS)
+				? format("(%s)|", nameAddr) : "";
+		final String mailbox = format("%s(%s)", mailboxName, uniqueAddrSpec);
+		
+		final String returnPath = format("(?:(?:%s)?<((?:%s)?|%s)>(?:%s)?)", cfws, cfws, addrSpec, cfws);
 
-		final String returnPath = "(?:(?:" + cfws + ")?<((?:" + cfws + ")?|" + addrSpec + ")>(?:" + cfws + ")?)";
-
-		final String mailboxList = "(?:(?:" + mailbox + ")(?:,(?:" + mailbox + "))*)";
-		final String groupPostfix = "(?:" + cfws + "|(?:" + mailboxList + ")" + ")?;(?:" + cfws + ")?";
+		final String mailboxList = format("(?:(?:%s)(?:,(?:%s))*)", mailbox, mailbox);
+		final String groupPostfix = format("(?:%s|(?:%s))?;(?:%s)?", cfws, mailboxList, cfws);
 		final String groupPrefix = phrase + ":";
 		final String group = groupPrefix + groupPostfix;
-		final String address = "(?:(?:" + mailbox + ")|(?:" + group + "))";
+		final String address = format("(?:(?:%s)|(?:%s))", mailbox, group);
 		// this string is too long, so must do it FSM style in isValidAddressList:
 		// private static final String addressList = address + "(?:," + address + ")*";
 
@@ -254,24 +261,24 @@ final class Dragons {
 
 		//compile patterns for efficient re-use:
 
-		/**
-		 * Java regex pattern for 2822 &quot;mailbox&quot; token; Not necessarily useful, but available in case.
+		/*
+		  Java regex pattern for 2822 &quot;mailbox&quot; token; Not necessarily useful, but available in case.
 		 */
 		MAILBOX_PATTERN = Pattern.compile(mailbox);
-		/**
+		/*
 		 * Java regex pattern for 2822 &quot;addr-spec&quot; token; Not necessarily useful, but available in case.
 		 */
 		ADDR_SPEC_PATTERN = Pattern.compile(addrSpec);
-		/**
-		 * Java regex pattern for 2822 &quot;mailbox-list&quot; token; Not necessarily useful, but available in case.
+		/*
+		  Java regex pattern for 2822 &quot;mailbox-list&quot; token; Not necessarily useful, but available in case.
 		 */
 		MAILBOX_LIST_PATTERN = Pattern.compile(mailboxList);
 		//    public static final Pattern ADDRESS_LIST_PATTERN = Pattern.compile(addressList);
-		/**
-		 * Java regex pattern for 2822 &quot;address&quot; token; Not necessarily useful, but available in case.
+		/*
+		  Java regex pattern for 2822 &quot;address&quot; token; Not necessarily useful, but available in case.
 		 */
 		ADDRESS_PATTERN = Pattern.compile(address);
-		/**
+		/*
 		 * Java regex pattern for 2822 &quot;comment&quot; token; Not necessarily useful, but available in case.
 		 */
 		COMMENT_PATTERN = Pattern.compile(comment);
