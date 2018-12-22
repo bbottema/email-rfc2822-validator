@@ -1,5 +1,6 @@
 package org.hazlewood.connor.bottema.emailaddress;
 
+import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -82,7 +83,7 @@ public final class EmailAddressParser {
 			return null;
 		}
 		// inefficient, but there is no parallel grammar tree to extract the return path accurately:
-		InternetAddressSimplified ia = getInternetAddress(email, criteria, extractCfwsPersonalNames);
+		InternetAddress ia = getInternetAddress(email, criteria, extractCfwsPersonalNames);
 		return ia == null ? "" : ia.getAddress();
 	}
 
@@ -174,7 +175,7 @@ public final class EmailAddressParser {
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static InternetAddressSimplified getInternetAddress(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	public static InternetAddress getInternetAddress(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
 			return null;
 		}
@@ -279,16 +280,16 @@ public final class EmailAddressParser {
 	 * emails set correctly (i.e. doesn't rely on InternetAddress parsing for extraction, but does require that the address be usable by InternetAddress,
 	 * although re-parsing with InternetAddress may cause exceptions, see getInternetAddress()); will not return null.
 	 */
-	public static InternetAddressSimplified[] extractHeaderAddresses(String header_txt, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	public static InternetAddress[] extractHeaderAddresses(String header_txt, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		// you may go insane from this code
 		if (header_txt == null || header_txt.equals("")) {
-			return new InternetAddressSimplified[0];
+			return new InternetAddress[0];
 		}
 		// optimize: separate method or boolean to indicate if group should be worried about at all
 		final Dragons dragons = Dragons.fromCriteria(criteria);
 		final Matcher m = dragons.MAILBOX_PATTERN.matcher(header_txt);
 		final Matcher gp = dragons.GROUP_PREFIX_PATTERN.matcher(header_txt);
-		final ArrayList<InternetAddressSimplified> result = new ArrayList<InternetAddressSimplified>(1);
+		final ArrayList<InternetAddress> result = new ArrayList<InternetAddress>(1);
 		final int max = header_txt.length();
 		boolean group_start = false;
 		boolean group_end = false;
@@ -327,7 +328,7 @@ public final class EmailAddressParser {
 				// must test m.end() == max first with early exit
 				if (m.end() == max || header_txt.charAt(m.end()) == ',' ||
 						(group_end = header_txt.charAt(m.end()) == ';')) {
-					InternetAddressSimplified cur_addr = pullFromGroups(m, criteria, extractCfwsPersonalNames);
+					InternetAddress cur_addr = pullFromGroups(m, criteria, extractCfwsPersonalNames);
 					if (cur_addr != null) {
 						result.add(cur_addr);
 					}
@@ -370,7 +371,7 @@ public final class EmailAddressParser {
 				break;
 			}
 		}
-		return result.size() > 0 ? result.toArray(new InternetAddressSimplified[0]) : new InternetAddressSimplified[0];
+		return result.size() > 0 ? result.toArray(new InternetAddress[0]) : new InternetAddress[0];
 	}
 
 	/**
@@ -392,7 +393,7 @@ public final class EmailAddressParser {
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static InternetAddressSimplified pullFromGroups(Matcher m, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	public static InternetAddress pullFromGroups(Matcher m, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		final String[] parts = getMatcherParts(m, criteria, extractCfwsPersonalNames);
 		if (parts[1] != null && parts[2] != null) {
 			// if for some reason you want to require that the result be re-parsable by InternetAddress,
@@ -401,7 +402,7 @@ public final class EmailAddressParser {
 			try {
 				// current_ia = new InternetAddress(parts[0] + " <" + parts[1] + "@" + parts[2]+ ">", true);
 				// so it parses it OK, but since javamail doesn't extract too well we make sure that the consituent parts are correct
-				return new InternetAddressSimplified(parts[0], parts[1] + "@" + parts[2]);
+				return new InternetAddress(parts[0], parts[1] + "@" + parts[2]);
 			} catch (UnsupportedEncodingException uee) {
 				// ignore
 			}
