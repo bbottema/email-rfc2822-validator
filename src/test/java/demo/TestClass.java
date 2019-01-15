@@ -4,7 +4,10 @@ import org.hazlewood.connor.bottema.emailaddress.EmailAddressParser;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator;
 import org.junit.Test;
 
+import javax.mail.internet.InternetAddress;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.DEFAULT;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.RFC_COMPLIANT;
 
 public class TestClass {
@@ -43,4 +46,10 @@ public class TestClass {
 				.isEqualTo(expected);
 	}
 	
+	@Test
+	public void testIt() {
+		InternetAddress address = EmailAddressParser.getInternetAddress("\"Bob\" <bob@hi.com>", DEFAULT, /* cfws */ true);
+		assertThat(address.getPersonal()).isEqualTo("Bob");
+		assertThat(address.getAddress()).isEqualTo("bob@hi.com");
+	}
 }
