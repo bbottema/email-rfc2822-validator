@@ -3,10 +3,15 @@ https://github.com/bbottema/email-rfc2822-validator/
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
 </dependency>
 
 RELEASE NOTES email-rfc2822-validator
+
+v1.1.2
+
+- Fixed regression bug where name and address were switched around
+
 
 v1.1.1
 
