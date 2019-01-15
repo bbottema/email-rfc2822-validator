@@ -39,7 +39,7 @@ public final class EmailAddressParser {
 	private EmailAddressParser() {
 		//
 	}
-
+	
 	/**
 	 * Tells us if the email represents a valid return path header string.
 	 * <p/>
@@ -53,7 +53,7 @@ public final class EmailAddressParser {
 	public static boolean isValidReturnPath(String email, EnumSet<EmailAddressCriteria> criteria) {
 		return email != null && Dragons.fromCriteria(criteria).RETURN_PATH_PATTERN.matcher(email).matches();
 	}
-
+	
 	/**
 	 * WARNING: You may want to use getReturnPathAddress() instead if you're looking for a clean version of the return path without CFWS, etc. See that
 	 * documentation first!
@@ -70,7 +70,7 @@ public final class EmailAddressParser {
 		Matcher m = Dragons.fromCriteria(criteria).RETURN_PATH_PATTERN.matcher(email);
 		return m.matches() ? m.group(1) : null;
 	}
-
+	
 	/**
 	 * Pull out the cleaned-up return path address. May return an empty string. Will require two parsings due to an inefficiency.
 	 *
@@ -83,10 +83,10 @@ public final class EmailAddressParser {
 			return null;
 		}
 		// inefficient, but there is no parallel grammar tree to extract the return path accurately:
-		InternetAddress ia = getInternetAddress(email, criteria, extractCfwsPersonalNames);
+			InternetAddress ia = getInternetAddress(email, criteria, extractCfwsPersonalNames);
 		return ia == null ? "" : ia.getAddress();
 	}
-
+	
 	/**
 	 * Tells us if a header line is valid, i.e. checks for a 2822 mailbox-list (which could only have one address in it, or might have more.) Applicable to From
 	 * or Resent-From headers <b>only</b>.
@@ -101,7 +101,7 @@ public final class EmailAddressParser {
 	public static boolean isValidMailboxList(String header_txt, EnumSet<EmailAddressCriteria> criteria) {
 		return Dragons.fromCriteria(criteria).MAILBOX_LIST_PATTERN.matcher(header_txt).matches();
 	}
-
+	
 	/**
 	 * Tells us if a header line is valid, i.e. a 2822 address-list (which could only have one address in it, or might have more.) Applicable to To, Cc, Bcc,
 	 * Reply-To, Resent-To, Resent-Cc, and Resent-Bcc headers <b>only</b>.
@@ -123,14 +123,14 @@ public final class EmailAddressParser {
 			if (m.end() == max) {
 				return true;
 			} else if (header_txt.charAt(m.end()) == ',') {
-				m.region(m.end() + 1, max);
-			} else {
+					m.region(m.end() + 1, max);
+				} else {
 				return false;
+				}
 			}
-		}
 		return false;
 	}
-
+	
 	/**
 	 * Given a 2822-valid single address string, give us an InternetAddress object holding that address, otherwise returns null. The email address that comes
 	 * back from the resulting InternetAddress object's getAddress() call will have comments and unnecessary quotation marks or whitespace removed.
@@ -182,7 +182,7 @@ public final class EmailAddressParser {
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
 		return m.matches() ? pullFromGroups(m, criteria, extractCfwsPersonalNames) : null;
 	}
-
+	
 	/**
 	 * See getInternetAddress; does the same thing but returns the constituent parts of the address in a three-element array (or null if the address is
 	 * invalid).
@@ -206,7 +206,7 @@ public final class EmailAddressParser {
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
 		return m.matches() ? getMatcherParts(m, criteria, extractCfwsPersonalNames) : null;
 	}
-
+	
 	/**
 	 * See getInternetAddress; does the same thing but returns the personal name that would have been returned from getInternetAddress() in String form.
 	 * <p/>
@@ -222,7 +222,7 @@ public final class EmailAddressParser {
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
 		return m.matches() ? getMatcherParts(m, criteria, extractCfwsPersonalNames)[0] : null;
 	}
-
+	
 	/**
 	 * See getInternetAddress; does the same thing but returns the local part that would have been returned from getInternetAddress() in String form
 	 * (essentially, the part to the left of the @). This may be useful because a simple search/split on a &quot;@&quot; is not a safe way to do this, given
@@ -237,7 +237,7 @@ public final class EmailAddressParser {
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
 		return m.matches() ? getMatcherParts(m, criteria, extractCfwsPersonalNames)[1] : null;
 	}
-
+	
 	/**
 	 * See getInternetAddress; does the same thing but returns the domain part in string form (essentially, the part to the right of the @). This may be useful
 	 * because a simple search/split on a &quot;@&quot; is not a safe way to do this, given escaped quoted strings, etc.
@@ -251,7 +251,7 @@ public final class EmailAddressParser {
 		Matcher m = Dragons.fromCriteria(criteria).MAILBOX_PATTERN.matcher(email);
 		return m.matches() ? getMatcherParts(m, criteria, extractCfwsPersonalNames)[2] : null;
 	}
-
+	
 	/**
 	 * Given the value of a header, like the From:, extract valid 2822 addresses from it and place them in an array. Returns an empty array if none found, will
 	 * not return null. Note that you should pass in everything except, e.g. &quot;From: &quot;, in other words, the header value without the header name and
@@ -373,7 +373,7 @@ public final class EmailAddressParser {
 		}
 		return result.size() > 0 ? result.toArray(new InternetAddress[0]) : new InternetAddress[0];
 	}
-
+	
 	/**
 	 * Using knowledge of the group-ID numbers (see comments at top) pull the data relevant to us from an already-successfully-matched matcher. See doc for
 	 * getInternetAddress and extractHeaderAddresses for info re: InternetAddress parsing compatability.
@@ -399,17 +399,17 @@ public final class EmailAddressParser {
 			// if for some reason you want to require that the result be re-parsable by InternetAddress,
 			// you could uncomment the appropriate stuff below, but note that not all the utility functions
 			// use pullFromGroups; some call getMatcherParts directly.
-			try {
+		try {
 				// current_ia = new InternetAddress(parts[0] + " <" + parts[1] + "@" + parts[2]+ ">", true);
 				// so it parses it OK, but since javamail doesn't extract too well we make sure that the consituent parts are correct
-				return new InternetAddress(parts[0], parts[1] + "@" + parts[2]);
+				return new InternetAddress(parts[1] + "@" + parts[2], parts[0]);
 			} catch (UnsupportedEncodingException uee) {
 				// ignore
-			}
+		}
 		}
 		return null;
 	}
-
+	
 	/**
 	 * See {@link #pullFromGroups(Matcher, EnumSet, boolean)}.
 	 *
@@ -530,7 +530,7 @@ public final class EmailAddressParser {
 		}
 		return new String[] { personal_string, current_localpart, current_domainpart };
 	}
-
+	
 	/**
 	 * Given a string, extract the first matched comment token as defined in 2822, trimmed; return null on all errors or non-findings
 	 * <p/>
@@ -550,7 +550,7 @@ public final class EmailAddressParser {
 		}
 		return m.group().trim(); // trim important
 	}
-
+	
 	/**
 	 * Given a string, if the string is a quoted string (without CFWS around it, although it will be trimmed) then remove the bounding quotations and then
 	 * unescape it. Useful when passing simple named address personal names into InternetAddress since InternetAddress always quotes the entire phrase token
@@ -574,7 +574,7 @@ public final class EmailAddressParser {
 		text = dragons.ESCAPED_QUOTE_PATTERN.matcher(text).replaceAll("\"");
 		return text.trim();
 	}
-
+	
 	/**
 	 * If the string starts and ends with s and e, remove them, otherwise return the string as it was passed in.
 	 */
