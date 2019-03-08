@@ -132,7 +132,7 @@ final class Dragons {
 		final String letDig = "[a-zA-Z0-9]";
 		final String letDigHyp = "[a-zA-Z0-9-]";
 		final String rfcLabel = format("%s(?:%s{0,61}%s)?", letDig, letDigHyp, letDig);
-		final String rfc1035DomainName = format("%s(?:\\.%s)*\\.%s{2,6}", rfcLabel, rfcLabel, letter);
+		final String rfc1035DomainName = format("%s(?:\\.%s)*\\.%s{2,26}", rfcLabel, rfcLabel, letter);
 
 		//RFC 2822 3.4 Address specification
 		//domain text - non white space controls and the rest of ASCII chars not
