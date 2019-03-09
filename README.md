@@ -16,7 +16,7 @@ email-rfc2822-validator is available in Maven Central:
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
 </dependency>
 ```
 
@@ -56,6 +56,11 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_D
 
 
 ### Latest Progress ###
+
+v1.1.3
+
+- [#13](https://github.com/bbottema/email-rfc2822-validator/issues/13): Fixed TLD limitation for domains longer than six
+
 
 v1.1.2
 

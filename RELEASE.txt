@@ -3,10 +3,15 @@ https://github.com/bbottema/email-rfc2822-validator/
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
 </dependency>
 
 RELEASE NOTES email-rfc2822-validator
+
+v1.1.3
+
+- #13: Fixed TLD limitation for domains longer than six
+
 
 v1.1.2
 
