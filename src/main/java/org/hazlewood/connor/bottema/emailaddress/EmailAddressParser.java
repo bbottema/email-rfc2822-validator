@@ -1,5 +1,6 @@
 package org.hazlewood.connor.bottema.emailaddress;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,7 +93,7 @@ public final class EmailAddressParser {
 			return null;
 		}
 		// inefficient, but there is no parallel grammar tree to extract the return path accurately:
-			InternetAddress ia = getInternetAddress(email, criteria, extractCfwsPersonalNames);
+		InternetAddress ia = getInternetAddress(email, criteria, extractCfwsPersonalNames);
 		return ia == null ? "" : ia.getAddress();
 	}
 	
@@ -134,11 +135,11 @@ public final class EmailAddressParser {
 			if (m.end() == max) {
 				return true;
 			} else if (header_txt.charAt(m.end()) == ',') {
-					m.region(m.end() + 1, max);
-				} else {
+				m.region(m.end() + 1, max);
+			} else {
 				return false;
-				}
 			}
+		}
 		return false;
 	}
 	
@@ -420,13 +421,13 @@ public final class EmailAddressParser {
 			// if for some reason you want to require that the result be re-parsable by InternetAddress,
 			// you could uncomment the appropriate stuff below, but note that not all the utility functions
 			// use pullFromGroups; some call getMatcherParts directly.
-		try {
+			try {
 				// current_ia = new InternetAddress(parts[0] + " <" + parts[1] + "@" + parts[2]+ ">", true);
 				// so it parses it OK, but since javamail doesn't extract too well we make sure that the consituent parts are correct
 				return new InternetAddress(parts[1] + "@" + parts[2], parts[0]);
 			} catch (UnsupportedEncodingException uee) {
 				// ignore
-		}
+			}
 		}
 		return null;
 	}
@@ -584,6 +585,7 @@ public final class EmailAddressParser {
 	 */
 	@SuppressWarnings("WeakerAccess")
 	@Nullable
+	@SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive")
 	public static String cleanupPersonalString(@Nullable String string, @NotNull EnumSet<EmailAddressCriteria> criteria) {
 		if (string == null) {
 			return null;
