@@ -1,10 +1,15 @@
 package org.hazlewood.connor.bottema.emailaddress;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.regex.Matcher;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A utility class to parse, clean up, and extract email addresses from messages per RFC2822 syntax. Designed to integrate with Javamail (this class will
@@ -50,7 +55,7 @@ public final class EmailAddressParser {
 	 * that operation done for you. <P>Note that &lt;&quot;&quot;&gt; is <b>not</b> a valid return-path.
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static boolean isValidReturnPath(String email, EnumSet<EmailAddressCriteria> criteria) {
+	public static boolean isValidReturnPath(@Nullable String email, @NotNull EnumSet<EmailAddressCriteria> criteria) {
 		return email != null && Dragons.fromCriteria(criteria).RETURN_PATH_PATTERN.matcher(email).matches();
 	}
 	
@@ -63,7 +68,9 @@ public final class EmailAddressParser {
 	 * (comments, whitespace) that may be between the brackets as well. So the example above will return: <P><tt>(my &gt; path)_</tt> <br>(where the _ is the
 	 * trailing space from the original string)
 	 */
-	public static String getReturnPathBracketContents(String email, EnumSet<EmailAddressCriteria> criteria) {
+	@SuppressWarnings("unused")
+	@Nullable
+	public static String getReturnPathBracketContents(@Nullable String email, @NotNull EnumSet<EmailAddressCriteria> criteria) {
 		if (email == null) {
 			return null;
 		}
@@ -78,7 +85,9 @@ public final class EmailAddressParser {
 	 * @return null if there are any syntax issues or other weirdness, otherwise the valid, trimmed return path email address without CFWS, surrounding angle
 	 * brackets, with quotes stripped where possible, etc. (may return an empty string).
 	 */
-	public static String getReturnPathAddress(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@SuppressWarnings("unused")
+	@Nullable
+	public static String getReturnPathAddress(@Nullable String email, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (!isValidReturnPath(email, criteria)) {
 			return null;
 		}
@@ -98,7 +107,8 @@ public final class EmailAddressParser {
 	 *
 	 * @see #isValidAddressList(String, EnumSet)
 	 */
-	public static boolean isValidMailboxList(String header_txt, EnumSet<EmailAddressCriteria> criteria) {
+	@SuppressWarnings({"unused", "WeakerAccess"})
+	public static boolean isValidMailboxList(@NotNull String header_txt, @NotNull EnumSet<EmailAddressCriteria> criteria) {
 		return Dragons.fromCriteria(criteria).MAILBOX_LIST_PATTERN.matcher(header_txt).matches();
 	}
 	
@@ -113,7 +123,8 @@ public final class EmailAddressParser {
 	 *
 	 * @see #isValidMailboxList(String, EnumSet)
 	 */
-	public static boolean isValidAddressList(String header_txt, EnumSet<EmailAddressCriteria> criteria) {
+	@SuppressWarnings({"unused", "WeakerAccess"})
+	public static boolean isValidAddressList(@NotNull String header_txt, @NotNull EnumSet<EmailAddressCriteria> criteria) {
 		// creating the actual ADDRESS_LIST_PATTERN string proved too large for java, but
 		// fortunately we can use this alternative FSM to check. Since the address pattern
 		// is ugreedy, it will match all CFWS up to the comma which we can then require easily.
@@ -174,8 +185,8 @@ public final class EmailAddressParser {
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
-	@SuppressWarnings("WeakerAccess")
-	public static InternetAddress getInternetAddress(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@Nullable
+	public static InternetAddress getInternetAddress(@Nullable String email, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
 			return null;
 		}
@@ -199,7 +210,8 @@ public final class EmailAddressParser {
 	 * @return a three-element array containing the personal name String, local part String, and the domain part String of the address, in that order, without
 	 * the @; will return null if the address is invalid; if it is valid this will not return null but the personal name (at index 0) may be null
 	 */
-	public static String[] getAddressParts(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@Nullable
+	public static String[] getAddressParts(@Nullable String email, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
 			return null;
 		}
@@ -215,7 +227,9 @@ public final class EmailAddressParser {
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
-	public static String getPersonalName(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@SuppressWarnings("unused")
+	@Nullable
+	public static String getPersonalName(@Nullable String email, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
 			return null;
 		}
@@ -230,7 +244,9 @@ public final class EmailAddressParser {
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
-	public static String getLocalPart(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@SuppressWarnings("unused")
+	@Nullable
+	public static String getLocalPart(@Nullable String email, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
 			return null;
 		}
@@ -244,7 +260,9 @@ public final class EmailAddressParser {
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
-	public static String getDomain(String email, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@SuppressWarnings("unused")
+	@Nullable
+	public static String getDomain(@Nullable String email, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		if (email == null) {
 			return null;
 		}
@@ -280,7 +298,9 @@ public final class EmailAddressParser {
 	 * emails set correctly (i.e. doesn't rely on InternetAddress parsing for extraction, but does require that the address be usable by InternetAddress,
 	 * although re-parsing with InternetAddress may cause exceptions, see getInternetAddress()); will not return null.
 	 */
-	public static InternetAddress[] extractHeaderAddresses(String header_txt, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@SuppressWarnings("unused")
+	@NotNull
+	public static InternetAddress[] extractHeaderAddresses(@Nullable String header_txt, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		// you may go insane from this code
 		if (header_txt == null || header_txt.equals("")) {
 			return new InternetAddress[0];
@@ -393,7 +413,8 @@ public final class EmailAddressParser {
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static InternetAddress pullFromGroups(Matcher m, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@Nullable
+	public static InternetAddress pullFromGroups(@NotNull Matcher m, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		final String[] parts = getMatcherParts(m, criteria, extractCfwsPersonalNames);
 		if (parts[1] != null && parts[2] != null) {
 			// if for some reason you want to require that the result be re-parsable by InternetAddress,
@@ -417,7 +438,8 @@ public final class EmailAddressParser {
 	 * @return will not return null
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static String[] getMatcherParts(Matcher m, EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
+	@NotNull
+	public static String[] getMatcherParts(@NotNull Matcher m, @NotNull EnumSet<EmailAddressCriteria> criteria, boolean extractCfwsPersonalNames) {
 		String current_localpart = null;
 		String current_domainpart = null;
 		String local_part_da;
@@ -528,6 +550,7 @@ public final class EmailAddressParser {
 		if (Dragons.fromCriteria(criteria).ADDR_SPEC_PATTERN.matcher(test_addr).matches()) {
 			current_localpart = removeAnyBounding('"', '"', current_localpart);
 		}
+		//noinspection ConstantConditions
 		return new String[] { personal_string, current_localpart, current_domainpart };
 	}
 	
@@ -540,7 +563,8 @@ public final class EmailAddressParser {
 	 * find the CFWS personal name (see boolean option) then such a nested comment would probably not be the one you were looking for?
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static String getFirstComment(String text, EnumSet<EmailAddressCriteria> criteria) {
+	@Nullable
+	public static String getFirstComment(@Nullable String text, @NotNull EnumSet<EmailAddressCriteria> criteria) {
 		if (text == null) {
 			return null; // important
 		}
@@ -559,7 +583,8 @@ public final class EmailAddressParser {
 	 * anything else, this just returns it unadulterated.
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static String cleanupPersonalString(String string, EnumSet<EmailAddressCriteria> criteria) {
+	@Nullable
+	public static String cleanupPersonalString(@Nullable String string, @NotNull EnumSet<EmailAddressCriteria> criteria) {
 		if (string == null) {
 			return null;
 		}
@@ -569,7 +594,7 @@ public final class EmailAddressParser {
 		if (!m.matches()) {
 			return text;
 		}
-		text = removeAnyBounding('"', '"', m.group());
+		text = requireNonNull(removeAnyBounding('"', '"', m.group()));
 		text = dragons.ESCAPED_BSLASH_PATTERN.matcher(text).replaceAll("\\\\");
 		text = dragons.ESCAPED_QUOTE_PATTERN.matcher(text).replaceAll("\"");
 		return text.trim();
@@ -579,7 +604,8 @@ public final class EmailAddressParser {
 	 * If the string starts and ends with s and e, remove them, otherwise return the string as it was passed in.
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static String removeAnyBounding(char s, char e, String str) {
+	@Nullable
+	public static String removeAnyBounding(char s, char e, @Nullable String str) {
 		boolean valueStartsEndsWithSAndE = str != null && str.length() >= 2 && str.startsWith(String.valueOf(s)) && str.endsWith(String.valueOf(e));
 		return valueStartsEndsWithSAndE ? str.substring(1, str.length() - 1) : str;
 	}

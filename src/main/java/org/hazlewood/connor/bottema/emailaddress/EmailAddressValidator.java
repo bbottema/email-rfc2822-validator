@@ -25,6 +25,9 @@ package org.hazlewood.connor.bottema.emailaddress;
  * limitations under the License.
  */
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.EnumSet;
 
 /**
@@ -115,6 +118,7 @@ public final class EmailAddressValidator {
 	 * @return Whether the e-mail address is a valid address excluding the more exotic formats.
 	 * @see EmailAddressCriteria#DEFAULT
 	 */
+	@SuppressWarnings("unused")
 	public static boolean isValid(final String email) {
 		return isValid(email, EmailAddressCriteria.DEFAULT);
 	}
@@ -126,6 +130,7 @@ public final class EmailAddressValidator {
 	 * @return Whether the e-mail address is compliant with RFC 2822.
 	 * @see EmailAddressCriteria#RFC_COMPLIANT
 	 */
+	@SuppressWarnings("unused")
 	public static boolean isValidStrict(final String email) {
 		return isValid(email, EmailAddressCriteria.RFC_COMPLIANT);
 	}
@@ -145,7 +150,7 @@ public final class EmailAddressValidator {
 	 * @return Whether the e-mail address is compliant with RFC 2822, configured using the passed in {@link EmailAddressCriteria}.
 	 * @see EmailAddressCriteria
 	 */
-	public static boolean isValid(final String email, final EnumSet<EmailAddressCriteria> criteria) {
+	public static boolean isValid(@Nullable final String email, @NotNull final EnumSet<EmailAddressCriteria> criteria) {
 		return isValidMailbox(email, Dragons.fromCriteria(criteria));
 	}
 
@@ -163,7 +168,7 @@ public final class EmailAddressValidator {
 	 * @param dragons the regular expressions compiled using given criteria, used to validate email strings with
 	 * @return true if the given email text is valid according to RFC 2822, false otherwise.
 	 */
-	private static boolean isValidMailbox(String email, Dragons dragons) {
+	private static boolean isValidMailbox(@Nullable final String email, @NotNull final Dragons dragons) {
 		return (email != null) && dragons.MAILBOX_PATTERN.matcher(email).matches();
 	}
 }

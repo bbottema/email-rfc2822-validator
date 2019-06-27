@@ -1,8 +1,8 @@
 package org.hazlewood.connor.bottema.emailaddress;
 
-import static java.util.EnumSet.of;
-
 import java.util.EnumSet;
+
+import static java.util.EnumSet.of;
 
 /**
  * Defines a set of restriction flags for email address validation. To remain completely true to RFC 2822, all flags should be set to <code>true</code>.

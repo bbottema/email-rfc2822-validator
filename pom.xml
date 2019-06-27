@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.bbottema</groupId>
@@ -65,6 +66,12 @@
 			<artifactId>javax.mail</artifactId>
 			<version>[1.5.5,)</version>
 		</dependency>
+		<dependency><!-- Gives us @NotNull and @Nullable -->
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>16.0.2</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -98,13 +105,37 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.2</version>
+			</plugin>
+
+			<plugin>
+				<groupId>se.eris</groupId>
+				<artifactId>notnull-instrumenter-maven-plugin</artifactId>
+				<version>0.6.8</version>
+				<executions>
+					<execution>
+						<id>instrument</id>
+						<goals>
+							<goal>instrument</goal>
+							<goal>tests-instrument</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<implicit>true</implicit>
+					<nullable>
+						<param>org.jetbrains.annotations.Nullable</param>
+					</nullable>
+					<notNull>
+						<param>org.jetbrains.annotations.NotNull</param>
+					</notNull>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -147,6 +178,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>

@@ -1,5 +1,7 @@
 package org.hazlewood.connor.bottema.emailaddress;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +55,8 @@ final class Dragons {
 	 * @return Dragons based on criteria, cached if the criteria have been used before
 	 */
 	@SuppressWarnings("WeakerAccess")
-	protected static Dragons fromCriteria(EnumSet<EmailAddressCriteria> criteria) {
+	@NotNull
+	protected static Dragons fromCriteria(@NotNull final EnumSet<EmailAddressCriteria> criteria) {
 		if (!cache.containsKey(criteria)) {
 			cache.put(criteria, new Dragons(criteria));
 		}
@@ -63,7 +66,8 @@ final class Dragons {
 	/**
 	 * Hatch dragons...
 	 */
-	private Dragons(EnumSet<EmailAddressCriteria> criteria) {
+	@NotNull
+	private Dragons(@NotNull final EnumSet<EmailAddressCriteria> criteria) {
 		// RFC 2822 2.2.2 Structured Header Field Bodies
 		final String crlf = "\\r\\n";
 		final String wsp = "[ \\t]"; //space or tab
