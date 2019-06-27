@@ -289,7 +289,7 @@ public final class EmailAddressParser {
 		final Dragons dragons = Dragons.fromCriteria(criteria);
 		final Matcher m = dragons.MAILBOX_PATTERN.matcher(header_txt);
 		final Matcher gp = dragons.GROUP_PREFIX_PATTERN.matcher(header_txt);
-		final ArrayList<InternetAddress> result = new ArrayList<InternetAddress>(1);
+		final ArrayList<InternetAddress> result = new ArrayList<>(1);
 		final int max = header_txt.length();
 		boolean group_start = false;
 		boolean group_end = false;

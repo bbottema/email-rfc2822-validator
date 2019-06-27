@@ -47,7 +47,7 @@ final class Dragons {
 	/**
 	 * Very simply cache to avoid recreating dragons all the time.
 	 */
-	private static final Map<EnumSet<EmailAddressCriteria>, Dragons> cache = new HashMap<EnumSet<EmailAddressCriteria>, Dragons>();
+	private static final Map<EnumSet<EmailAddressCriteria>, Dragons> cache = new HashMap<>();
 
 	/**
 	 * @return Dragons based on criteria, cached if the criteria have been used before
