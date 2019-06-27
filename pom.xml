@@ -74,8 +74,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>[1.5.5,)</version>
+			<artifactId>jakarta.mail</artifactId>
+			<version>[1.6.3,)</version>
 		</dependency>
 		<dependency><!-- Gives us @NotNull and @Nullable -->
 			<groupId>org.jetbrains</groupId>
