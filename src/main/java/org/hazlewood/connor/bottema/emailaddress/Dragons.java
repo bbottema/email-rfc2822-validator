@@ -18,31 +18,31 @@ final class Dragons {
 	/**
 	 * Java regex pattern for 2822 &quot;mailbox&quot; token; Not necessarily useful, but available in case.
 	 */
-	public final Pattern MAILBOX_PATTERN;
+	final Pattern MAILBOX_PATTERN;
 	/**
 	 * Java regex pattern for 2822 &quot;addr-spec&quot; token; Not necessarily useful, but available in case.
 	 */
-	public final Pattern ADDR_SPEC_PATTERN;
+	final Pattern ADDR_SPEC_PATTERN;
 	/**
 	 * Java regex pattern for 2822 &quot;mailbox-list&quot; token; Not necessarily useful, but available in case.
 	 */
-	public final Pattern MAILBOX_LIST_PATTERN;
+	final Pattern MAILBOX_LIST_PATTERN;
 	//    public static final Pattern ADDRESS_LIST_PATTERN = Pattern.compile(addressList);
 	/**
 	 * Java regex pattern for 2822 &quot;address&quot; token; Not necessarily useful, but available in case.
 	 */
-	public final Pattern ADDRESS_PATTERN;
+	final Pattern ADDRESS_PATTERN;
 	/**
 	 * Java regex pattern for 2822 &quot;comment&quot; token; Not necessarily useful, but available in case.
 	 */
-	public final Pattern COMMENT_PATTERN;
+	final Pattern COMMENT_PATTERN;
 
-	public final Pattern QUOTED_STRING_WO_CFWS_PATTERN;
-	public final Pattern RETURN_PATH_PATTERN;
-	public final Pattern GROUP_PREFIX_PATTERN;
+	final Pattern QUOTED_STRING_WO_CFWS_PATTERN;
+	final Pattern RETURN_PATH_PATTERN;
+	final Pattern GROUP_PREFIX_PATTERN;
 
-	public final Pattern ESCAPED_QUOTE_PATTERN;
-	public final Pattern ESCAPED_BSLASH_PATTERN;
+	final Pattern ESCAPED_QUOTE_PATTERN;
+	final Pattern ESCAPED_BSLASH_PATTERN;
 
 	/**
 	 * Very simply cache to avoid recreating dragons all the time.
