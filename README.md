@@ -15,7 +15,7 @@ email-rfc2822-validator is available in Maven Central:
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>1.1.3</version>
+    <version>2.1.3</version>
 </dependency>
 ```
 
