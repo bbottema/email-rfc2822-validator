@@ -119,7 +119,7 @@ public final class EmailAddressValidator {
 	 * @see EmailAddressCriteria#DEFAULT
 	 */
 	@SuppressWarnings("unused")
-	public static boolean isValid(final String email) {
+	public static boolean isValid(@Nullable final String email) {
 		return isValid(email, EmailAddressCriteria.DEFAULT);
 	}
 
@@ -131,7 +131,7 @@ public final class EmailAddressValidator {
 	 * @see EmailAddressCriteria#RFC_COMPLIANT
 	 */
 	@SuppressWarnings("unused")
-	public static boolean isValidStrict(final String email) {
+	public static boolean isValidStrict(@Nullable final String email) {
 		return isValid(email, EmailAddressCriteria.RFC_COMPLIANT);
 	}
 
