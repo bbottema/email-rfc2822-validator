@@ -15,7 +15,7 @@ email-rfc2822-validator is available in Maven Central:
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>2.1.3</version>
+    <version>2.1.4</version>
 </dependency>
 ```
 
@@ -55,6 +55,11 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_D
 
 
 ### Latest Progress ###
+
+v2.1.4
+
+- [#17](https://github.com/bbottema/email-rfc2822-validator/issues/17): IllegalArgumentException when passing null to EmailAddressValidator.isValid(String)
+
 
 v2.1.3
 
