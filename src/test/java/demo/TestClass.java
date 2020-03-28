@@ -1,12 +1,16 @@
 package demo;
 
+import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressParser;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator;
 import org.junit.Test;
 
 import javax.mail.internet.InternetAddress;
+import java.util.EnumSet;
 
+import static java.util.EnumSet.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.DEFAULT;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.RFC_COMPLIANT;
 
@@ -38,6 +42,13 @@ public class TestClass {
 		assertThat(EmailAddressParser.getAddressParts("\"ßoµ\" <notifications@example.com>", RFC_COMPLIANT, false)).isNullOrEmpty();
 		String emailaddress = "\"ßoµ\" <notifications@example.com>".replaceAll("[^\\x00-\\x7F]", "");
 		assertThat(EmailAddressParser.getAddressParts(emailaddress, RFC_COMPLIANT, false)).isNotEmpty();
+	}
+	
+	@Test
+	public void testAddressGithub18() {
+		String email = "?UTF-8?Q?Gesellschaft_fC3BCr_Freiheitsrechte_e2EV=2E? <info@freiheitsrechte.org>";
+		EnumSet<EmailAddressCriteria> criteria = of(ALLOW_SQUARE_BRACKETS_IN_A_TEXT);
+		assertThat(EmailAddressValidator.isValid(email, criteria)).isTrue();
 	}
 	
 	private static void assertEmail(String emailaddress, boolean expected) {
