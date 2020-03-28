@@ -98,7 +98,7 @@ final class Dragons {
 		
 		final String atext = format("[a-zA-Z0-9!#-'*+\\-/=?^-`{-~%s%s]",
 				criteria.contains(EmailAddressCriteria.ALLOW_DOT_IN_A_TEXT) ? "." : "",
-				criteria.contains(EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT) ? "\\[]" : "");
+				criteria.contains(EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT) ? "\\[\\]" : "");
 		// regular atext is same as atext but has no . or [ or ] allowed, no matter the class prefs, to prevent
 		// long recursions on e.g. "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t"
 		final String regularAtext = "[a-zA-Z0-9!#-'*+\\-/=?^-`{-~]";
