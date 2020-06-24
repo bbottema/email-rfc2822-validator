@@ -3,6 +3,7 @@ package demo;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressParser;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.mail.internet.InternetAddress;
@@ -10,12 +11,18 @@ import java.util.EnumSet;
 
 import static java.util.EnumSet.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALLOW_DOT_IN_A_TEXT;
+import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALLOW_PARENS_IN_LOCALPART;
+import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALLOW_QUOTED_IDENTIFIERS;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.DEFAULT;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.RFC_COMPLIANT;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestClass {
-	/* quick test some email addresses
+	/**
+	 * quick test some email addresses
 	 * </p>
 	 * lists taken from: http://stackoverflow.com/a/297494/441662 and http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx/
 	 */
@@ -62,5 +69,49 @@ public class TestClass {
 		InternetAddress address = EmailAddressParser.getInternetAddress("\"Bob\" <bob@hi.com>", DEFAULT, /* cfws */ true);
 		assertThat(address.getPersonal()).isEqualTo("Bob");
 		assertThat(address.getAddress()).isEqualTo("bob@hi.com");
+	}
+	
+	@Test
+	public void allowDotInaText() throws Exception {
+		// these email address validations should normally fail
+		assertFalse(EmailAddressValidator.isValid("Kayaks.org <kayaks@kayaks.org>"));
+		
+		// but with a configuration they could be allowed
+		assertTrue(EmailAddressValidator.isValid("Kayaks.org <kayaks@kayaks.org>",
+				EnumSet.of(ALLOW_DOT_IN_A_TEXT, ALLOW_QUOTED_IDENTIFIERS)));
+		
+	}
+	
+	@Test
+	public void allowSquareBracketsInaText() throws Exception {
+		// these email address validations should normally fail
+		assertFalse(EmailAddressValidator.isValid("[Kayaks] <kayaks@kayaks.org>"));
+		
+		// but with a configuration they could be allowed
+		assertTrue(EmailAddressValidator.isValid("[Kayaks] <kayaks@kayaks.org>",
+				EnumSet.of(ALLOW_SQUARE_BRACKETS_IN_A_TEXT, ALLOW_QUOTED_IDENTIFIERS)));
+		
+	}
+	
+	@Test
+	@Ignore("fix in the next release")
+	public void allowParensInLocalPart() throws Exception {
+		// these email address validations should normally fail
+		assertFalse(EmailAddressValidator.isValid("\"bob(hi)smith\"@test.com"));
+		
+		// but with a configuration they could be allowed
+		assertTrue(EmailAddressValidator.isValid("\"bob(hi)smith\"@test.com",
+				EnumSet.of(ALLOW_PARENS_IN_LOCALPART, ALLOW_QUOTED_IDENTIFIERS)));
+	}
+	
+	@Test
+	public void allowQuotedIdentifiers() throws Exception {
+		// these email address validations should normally fail
+		assertFalse(EmailAddressValidator.isValid("\"John Smith\" <john.smith@somewhere.com>",
+				EnumSet.noneOf(EmailAddressCriteria.class)));
+		
+		// but with a configuration they could be allowed
+		assertTrue(EmailAddressValidator.isValid("\"John Smith\" <john.smith@somewhere.com>",
+				EnumSet.of(ALLOW_QUOTED_IDENTIFIERS)));
 	}
 }
