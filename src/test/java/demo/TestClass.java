@@ -47,7 +47,7 @@ public class TestClass {
 	@Test
 	public void testAddressGithub18() {
 		String email = "?UTF-8?Q?Gesellschaft_fC3BCr_Freiheitsrechte_e2EV=2E? <info@freiheitsrechte.org>";
-		EnumSet<EmailAddressCriteria> criteria = of(ALLOW_SQUARE_BRACKETS_IN_A_TEXT);
+		EnumSet<EmailAddressCriteria> criteria = of(ALLOW_SQUARE_BRACKETS_IN_A_TEXT, ALLOW_QUOTED_IDENTIFIERS);
 		assertThat(EmailAddressValidator.isValid(email, criteria)).isTrue();
 	}
 	
