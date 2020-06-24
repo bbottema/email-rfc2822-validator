@@ -114,7 +114,7 @@ final class Dragons {
 
 		final String qtext = format("[%s!#-\\[\\]-~]", noWsCtl);
 		final String localPartqtext = format("[%s%s", noWsCtl,
-				criteria.contains(EmailAddressCriteria.ALLOW_PARENS_IN_LOCALPART) ? "!#-\\[\\]-~]" : "!#-'\\*-\\[]-~]");
+				criteria.contains(EmailAddressCriteria.ALLOW_PARENS_IN_LOCALPART) ? "!#-\\[\\]-~]" : "!#-'\\*-\\[\\]-~]");
 
 		final String qcontent = format("(?:%s|%s)", qtext, quotedPair);
 		final String localPartqcontent = format("(?>%s|%s)", localPartqtext, quotedPair);
