@@ -23,7 +23,7 @@ import static java.util.EnumSet.of;
  * 		</li>
  * 		<li>
  * 		    User wants to intelligently parse a possibly-ugly address with the goal being a cleaned up usable address that other software
- * 		    (MTAs, databases, whatever) can use / parse without breaking; {@link #DEFAULT} tailors to this use case (with the possible exception of
+ * 		    (MTAs, databases, whatever) can use / parse without breaking; {@link #RECOMMENDED} tailors to this use case (with the possible exception of
  * 		    {@link #ALLOW_DOT_IN_A_TEXT}, to taste). In our experience they allowed "real" addresses the highest percentage of the time, and the addresses they
  * 		    failed on were almost all ridiculous.
  * 		</li>
@@ -115,7 +115,7 @@ public enum EmailAddressCriteria {
 	 *     <li>{@link #ALLOW_PARENS_IN_LOCALPART}</li>
 	 * </ul>.
 	 */
-	public static final EnumSet<EmailAddressCriteria> DEFAULT = of(ALLOW_QUOTED_IDENTIFIERS, ALLOW_PARENS_IN_LOCALPART);
+	public static final EnumSet<EmailAddressCriteria> RECOMMENDED = of(ALLOW_QUOTED_IDENTIFIERS, ALLOW_PARENS_IN_LOCALPART);
 
 	/**
 	 * Criteria which is most RFC 2822 compliant and allows all compliant address forms, including the more exotic ones. Most useful for validating the broadest

@@ -123,11 +123,11 @@ public final class EmailAddressValidator {
 	 *
 	 * @param email A string representing an email address.
 	 * @return Whether the e-mail address is a valid address excluding the more exotic formats.
-	 * @see EmailAddressCriteria#DEFAULT
+	 * @see EmailAddressCriteria#RECOMMENDED
 	 */
 	@SuppressWarnings("unused")
 	public static boolean isValid(@Nullable final String email) {
-		return isValid(email, EmailAddressCriteria.DEFAULT);
+		return isValid(email, EmailAddressCriteria.RECOMMENDED);
 	}
 
 	/**

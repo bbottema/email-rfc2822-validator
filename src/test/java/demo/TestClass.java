@@ -15,7 +15,7 @@ import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALL
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALLOW_PARENS_IN_LOCALPART;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALLOW_QUOTED_IDENTIFIERS;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT;
-import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.DEFAULT;
+import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.RECOMMENDED;
 import static org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria.RFC_COMPLIANT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -66,7 +66,7 @@ public class TestClass {
 	
 	@Test
 	public void testIt() {
-		InternetAddress address = EmailAddressParser.getInternetAddress("\"Bob\" <bob@hi.com>", DEFAULT, /* cfws */ true);
+		InternetAddress address = EmailAddressParser.getInternetAddress("\"Bob\" <bob@hi.com>", RECOMMENDED, /* cfws */ true);
 		assertThat(address.getPersonal()).isEqualTo("Bob");
 		assertThat(address.getAddress()).isEqualTo("bob@hi.com");
 	}

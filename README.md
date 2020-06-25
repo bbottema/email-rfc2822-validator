@@ -45,7 +45,7 @@ Here's an example for validating an email address:
 
 ```java
 boolean isValid = EmailAddressValidator.isValid(emailaddress);
-boolean isValid = EmailAddressValidator.isValid(emailaddress, EmailAddressCriteria.DEFAULT);
+boolean isValid = EmailAddressValidator.isValid(emailaddress, EmailAddressCriteria.RECOMMENDED);
 boolean isValid = EmailAddressValidator.isValid(emailaddress, EmailAddressCriteria.RFC_COMPLIANT);
 boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_DOT_IN_A_TEXT, ALLOW_SQUARE_BRACKETS_IN_A_TEXT));
 ```
