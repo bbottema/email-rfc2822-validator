@@ -1,4 +1,7 @@
-[![APACHE v2 License](https://img.shields.io/badge/license-apachev2-blue.svg?style=flat)](LICENSE-2.0.txt) [![Latest Release](https://img.shields.io/maven-central/v/com.github.bbottema/emailaddress-rfc2822.svg?style=flat)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.bbottema%22%20AND%20a%3A%22emailaddress-rfc2822%22) [![Build Status](https://img.shields.io/badge/CircleCI-build-brightgreen.svg?style=flat)](https://circleci.com/gh/bbottema/email-rfc2822-validator) [![Codacy](https://img.shields.io/codacy/grade/7cf43e32227f443780e7b16018542e24.svg?style=flat)](https://www.codacy.com/app/b-bottema/email-rfc2822-validator)
+[![APACHE v2 License](https://img.shields.io/badge/license-apachev2-blue.svg?style=flat)](LICENSE-2.0.txt) 
+[![Latest Release](https://img.shields.io/maven-central/v/com.github.bbottema/emailaddress-rfc2822.svg?style=flat)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.bbottema%22%20AND%20a%3A%22emailaddress-rfc2822%22) 
+[![Build Status](https://img.shields.io/badge/CircleCI-build-brightgreen.svg?style=flat)](https://circleci.com/gh/bbottema/email-rfc2822-validator) 
+[![Codacy](https://img.shields.io/codacy/grade/7cf43e32227f443780e7b16018542e24.svg?style=flat)](https://www.codacy.com/app/b-bottema/email-rfc2822-validator)
 
 # email-rfc2822-validator #
 
@@ -15,7 +18,7 @@ email-rfc2822-validator is available in Maven Central:
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>2.1.4</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
@@ -55,6 +58,11 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_D
 
 
 ### Latest Progress ###
+
+v2.2.0
+
+- [#19](https://github.com/bbottema/email-rfc2822-validator/issues/19): Parens not parsed properly and API documentation / usage needs improvement
+
 
 v2.1.4
 
