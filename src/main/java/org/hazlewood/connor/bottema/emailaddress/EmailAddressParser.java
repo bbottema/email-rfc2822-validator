@@ -17,26 +17,28 @@ import static java.util.Objects.requireNonNull;
  * require that you have a javamail mail.jar in your classpath), but you could easily change the existing methods around to not use Javamail at all. For
  * example, if you're changing the code, see the difference between getInternetAddress and getDomain: the latter doesn't depend on any javamail code. This is
  * all a by-product of what this class was written for, so feel free to modify it to suit your needs.
- * <p/>
- * <hr /> Regarding the parameter <code>extractCfwsPersonalNames</code>:
- * <p/>
+ * <p>
+ * <strong>Regarding the parameter <code>extractCfwsPersonalNames</code>:</strong>
+ * <p>
  * This criteria controls the behavior of getInternetAddress and extractHeaderAddresses. If included, it allows the
  * not-totally-kosher-but-happens-in-the-real-world practice of:
- * <p/>
+ * <p>
  * &lt;bob@example.com&gt; (Bob Smith)
- * <p/>
+ * <p>
  * In this case, &quot;Bob Smith&quot; is not techinically the personal name, just a comment. If this is included, the methods will convert this into: Bob Smith
  * &lt;bob@example.com&gt;
- * <p/>
- * This also happens somewhat more often and appropriately with
- * <p/>
- * <tt>mailer-daemon@blah.com (Mail Delivery System)</tt>
- * <p/>
+ * <p>
+ * This also happens somewhat more often and appropriately with <code>mailer-daemon@blah.com (Mail Delivery System)</code>
+ * <p>
  * If a personal name appears to the left and CFWS appears to the right of an address, the methods will favor the personal name to the left. If the methods need
- * to use the CFWS following the address, they will take the first comment token they find. <P>e.g.: <P><tt>"bob smith" &lt;bob@example.com&gt; (Bobby)</tt>
- * <br> will yield personal name &quot;bob smith&quot; <br><tt>&lt;bob@example.com&gt; (Bobby)</tt> <br>will yield personal name &quot;Bobby&quot;
- * <br><tt>bob@example.com (Bobby)</tt> <br>will yield personal name &quot;Bobby&quot; <br><tt>bob@example.com (Bob) (Smith)</tt> <br>will yield personal name
- * &quot;Bob&quot; <hr />
+ * to use the CFWS following the address, they will take the first comment token they find.
+ * <p>
+ * e.g.:
+ * <p>
+ * <code>"bob smith" &lt;bob@example.com&gt; (Bobby)</code> yields personal name &quot;bob smith&quot;<br>
+ * <code>&lt;bob@example.com&gt; (Bobby)</code> yields personal name &quot;Bobby&quot;<br>
+ * <code>bob@example.com (Bobby)</code> yields personal name &quot;Bobby&quot;<br>
+ * <code>bob@example.com (Bob) (Smith)</code> yields personal name &quot;Bob&quot;
  */
 public final class EmailAddressParser {
 	/**
@@ -48,9 +50,9 @@ public final class EmailAddressParser {
 	
 	/**
 	 * Tells us if the email represents a valid return path header string.
-	 * <p/>
+	 * <p>
 	 * NOTE: legit forms like &lt;(comment here)&gt; will return true.
-	 * <p/>
+	 * <p>
 	 * You can check isValidReturnPath(), and if it is true, and if getInternetAddress() returns null, you know you have a DSN, whether it be an empty return
 	 * path or one with only CFWS inside the brackets (which is legit, as demonstated above). Note that you can also simply call getReturnPathAddress() to have
 	 * that operation done for you. <P>Note that &lt;&quot;&quot;&gt; is <b>not</b> a valid return-path.
@@ -63,7 +65,7 @@ public final class EmailAddressParser {
 	/**
 	 * WARNING: You may want to use getReturnPathAddress() instead if you're looking for a clean version of the return path without CFWS, etc. See that
 	 * documentation first!
-	 * <p/>
+	 * <p>
 	 * Pull whatever's inside the angle brackets out, without alteration or cleaning. This is more secure than a simple substring() since paths like:
 	 * <P><tt>&lt;(my &gt; path) &gt;</tt> <P>...are legal return-paths and may throw a simpler parser off. However this method will return <b>all</b> CFWS
 	 * (comments, whitespace) that may be between the brackets as well. So the example above will return: <P><tt>(my &gt; path)_</tt> <br>(where the _ is the
@@ -100,11 +102,10 @@ public final class EmailAddressParser {
 	/**
 	 * Tells us if a header line is valid, i.e. checks for a 2822 mailbox-list (which could only have one address in it, or might have more.) Applicable to From
 	 * or Resent-From headers <b>only</b>.
-	 * <p/>
+	 * <p>
 	 * This method seems quick enough so far, but I'm not totally convinced it couldn't be slow given a complicated near-miss string. You may just want to call
 	 * extractHeaderAddresses() instead, unless you must confirm that the format is perfect. I think that in 99.9999% of real-world cases this method will work
 	 * fine.
-	 * <p/>
 	 *
 	 * @see #isValidAddressList(String, EnumSet)
 	 */
@@ -116,11 +117,10 @@ public final class EmailAddressParser {
 	/**
 	 * Tells us if a header line is valid, i.e. a 2822 address-list (which could only have one address in it, or might have more.) Applicable to To, Cc, Bcc,
 	 * Reply-To, Resent-To, Resent-Cc, and Resent-Bcc headers <b>only</b>.
-	 * <p/>
+	 * <p>
 	 * This method seems quick enough so far, but I'm not totally convinced it couldn't be slow given a complicated near-miss string. You may just want to call
 	 * extractHeaderAddresses() instead, unless you must confirm that the format is perfect. I think that in 99.9999% of real-world cases this method will work
 	 * fine and quickly enough. Let me know what your testing reveals.
-	 * <p/>
 	 *
 	 * @see #isValidMailboxList(String, EnumSet)
 	 */
@@ -146,12 +146,12 @@ public final class EmailAddressParser {
 	/**
 	 * Given a 2822-valid single address string, give us an InternetAddress object holding that address, otherwise returns null. The email address that comes
 	 * back from the resulting InternetAddress object's getAddress() call will have comments and unnecessary quotation marks or whitespace removed.
-	 * <p/>
+	 * <p>
 	 * If your String is an email header, you should probably use extractHeaderAddresses instead, since most headers can have multiple addresses in them. (see
 	 * that method for more info.) This method will indeed fail if you use it on a header line with more than one address.
-	 * <p/>
+	 * <p>
 	 * Exception: You CAN and should use this for the Sender header, and probably you want to use it for the X-Original-To as well.
-	 * <p/>
+	 * <p>
 	 * Another exception: You can use this for the Return-Path, but if you want to know that a Return-Path is valid and you want to extract it, you will have to
 	 * call both this method and isValidReturnPath; this operation can be done for you by simply calling getReturnPathAddress() instead of this method. In terms
 	 * of this method's application to the return-path, note that the common valid Return-Path value &lt;&gt; will return null. So will the illegitimate
@@ -160,28 +160,28 @@ public final class EmailAddressParser {
 	 * to extract a clean address from it without CFWS (getReturnPathBracketContents() will return any CFWS), or if you want to determine if a validated return
 	 * path actually contains an address in it and isn't just empty or full of CFWS. Except for empty return paths (those lacking an address) the Return-Path
 	 * specification is a subset of valid 2822 addresses, so this method will work on all non-empty return-paths, failing only on the empty ones.
-	 * <p/>
+	 * <p>
 	 * In general for this method, note: although this method does not use InternetAddress to parse/extract the information, it does ensure that InternetAddress
 	 * can use the results (i.e. that there are no encoding issues), but note that an InternetAddress object can hold (and use) values for the address which it
 	 * could not have parsed itself. Thus, it's possible that for InternetAddress addr, which came as the result of this method, the following may throw an
 	 * exception <b>or</b> may silently fail:<BR> InternetAddress addr2 = InternetAddress.parse(addr.toString());
-	 * <p/>
+	 * <p>
 	 * The InternetAddress objects returned by this method will not do any decoding of RFC-2047 encoded personal names. See the documentation for this overall
 	 * class (above) for more.
-	 * <p/>
+	 * <p>
 	 * Again, all other uses of that addr object should work OK. It is recommended that if you are using this class that you never create an InternetAddress
 	 * object using InternetAddress's own constructors or parsing methods; rather, retrieve them through this class. Perhaps the addr.clone() would work OK,
 	 * though.
-	 * <p/>
+	 * <p>
 	 * The personal name will include any and all phrase token(s) to the left of the address, if they exist, and the string will be trim()'ed, but note that
 	 * InternetAddress, when generating the getPersonal() result or the toString() result, if it encounters any quotes or backslashes in the personal name
 	 * String, will put the entire thing in a big quoted-escaped chunk.
-	 * <p/>
+	 * <p>
 	 * This will do some smart unescaping to prevent that from happening unnecessarily; specifically, if there are unecessary quotes around a personal name, it
 	 * will remove them. E.g.
-	 * <p/>
+	 * <p>
 	 * "Bob" &lt;bob@hi.com&gt; <br>becomes: <BR>Bob &lt;bob@hi.com&gt;
-	 * <p/>
+	 * <p>
 	 * (apologies to bob@hi.com for everything i've done to him)
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
@@ -198,14 +198,13 @@ public final class EmailAddressParser {
 	/**
 	 * See getInternetAddress; does the same thing but returns the constituent parts of the address in a three-element array (or null if the address is
 	 * invalid).
-	 * <p/>
+	 * <p>
 	 * This may be useful because even with cleaned-up address extracted with this class the parsing to achieve this is not trivial.
-	 * <p/>
+	 * <p>
 	 * To actually use these values in an email, you should construct an InternetAddress object (or equivalent) which can handle the various quoting, adding of
 	 * the angle brackets around the address, etc., necessary for presenting the whole address.
-	 * <p/>
+	 * <p>
 	 * To construct the email address, you can safely use: <BR>result[1] + &quot;@&quot; + result[2]
-	 * <p/>
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 * @return a three-element array containing the personal name String, local part String, and the domain part String of the address, in that order, without
@@ -222,7 +221,7 @@ public final class EmailAddressParser {
 	
 	/**
 	 * See getInternetAddress; does the same thing but returns the personal name that would have been returned from getInternetAddress() in String form.
-	 * <p/>
+	 * <p>
 	 * The Strings returned by this method will not reflect any decoding of RFC-2047 encoded personal names. See the documentation for this overall class
 	 * (above) for more.
 	 *
@@ -278,21 +277,20 @@ public final class EmailAddressParser {
 	 * unnecessary quotation marks or whitespace removed. If a bad address is encountered, parsing stops, and the good addresses found up until then (if any)
 	 * are returned. This is kind of strict and could be improved, but that's the way it is for now. If you need to know if the header is totally valid (not
 	 * just up to a certain address) then you can use isValidMailboxList() or isValidAddressList() or isValidMailbox(), depending on the header:
-	 * <p/>
+	 * <p>
 	 * This method can handle group addresses, but it does not preseve the group name or the structure of any groups; rather it flattens them all into the same
 	 * array. You can call this method on the From or any other header that uses the mailbox-list form (which doesn't use groups), or you can call it on the To,
 	 * Cc, Bcc, or Reply-To or any other header which uses the address-list format which might have groups in there. This method doesn't enforce any group
 	 * structure syntax either. If you care to test for 2822 validity of a list of addresses (including group format), use the appropriate method. This will
 	 * dependably extract addresses from a valid list. If the list is invalid, it may extract them anyway, or it may fail somewhere along the line.
-	 * <p/>
+	 * <p>
 	 * You should not use this method on the Return-Path header; instead use getInternetAddress() or getReturnPathAddress() (see that doc for info about
 	 * Return-Path). However, you could use this on the Sender header if you didn't care to check it for validity, since single mailboxes are valid subsets of
 	 * valid mailbox-lists and address-lists.
-	 * <p/>
 	 *
 	 * @param header_txt               is text from whatever header (not including the header name and &quot;: &quot;. I don't think the String needs to be
 	 *                                 unfolded, but i haven't tested that.
-	 *                                 <p/>
+	 *                                 <p>
 	 *                                 see getInternetAddress() for more info: this extracts the same way
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
 	 * @return zero-length array if erorrs or none found, otherwise an array of length &gt; 0 with the addresses as InternetAddresses with the personal name and
@@ -398,17 +396,17 @@ public final class EmailAddressParser {
 	/**
 	 * Using knowledge of the group-ID numbers (see comments at top) pull the data relevant to us from an already-successfully-matched matcher. See doc for
 	 * getInternetAddress and extractHeaderAddresses for info re: InternetAddress parsing compatability.
-	 * <p/>
+	 * <p>
 	 * You could roll your own method that does what you care about.
-	 * <p/>
+	 * <p>
 	 * This should work on the matcher for MAILBOX_LIST_PATTERN or MAILBOX_PATTERN, but only those. With some tweaking it could easily be adapted to some
 	 * others.
-	 * <p/>
+	 * <p>
 	 * May return null on encoding errors.
-	 * <p/>
+	 * <p>
 	 * Also cleans up the address: tries to strip bounding quotes off of the local part without damaging it's parsability (by this class); if it can, do that;
 	 * all other cases, don't.
-	 * <p/>
+	 * <p>
 	 * e.g. &quot;bob&quot;@example.com becomes bob@example.com
 	 *
 	 * @param extractCfwsPersonalNames See {@link EmailAddressParser}
@@ -557,9 +555,9 @@ public final class EmailAddressParser {
 	
 	/**
 	 * Given a string, extract the first matched comment token as defined in 2822, trimmed; return null on all errors or non-findings
-	 * <p/>
+	 * <p>
 	 * This is probably not super-useful. Included just in case.
-	 * <p/>
+	 * <p>
 	 * Note for future improvement: if COMMENT_PATTERN could handle nested comments, then this should be able to as well, but if this method were to be used to
 	 * find the CFWS personal name (see boolean option) then such a nested comment would probably not be the one you were looking for?
 	 */

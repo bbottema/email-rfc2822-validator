@@ -11,7 +11,7 @@ import static java.lang.String.format;
 
 /**
  * MY DRAGONS WILL EAT YOUR DRAGONS
- * <p/>
+ * <p>
  * Regular expressions based on given list of {@link EmailAddressCriteria}. Used in both validation ({@link EmailAddressValidator}) and email data extraction
  * ({@link EmailAddressParser}).
  */

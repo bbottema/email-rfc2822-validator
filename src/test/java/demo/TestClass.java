@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 public class TestClass {
 	/**
 	 * quick test some email addresses
-	 * </p>
+	 * <p>
 	 * lists taken from: http://stackoverflow.com/a/297494/441662 and http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx/
 	 */
 	@Test

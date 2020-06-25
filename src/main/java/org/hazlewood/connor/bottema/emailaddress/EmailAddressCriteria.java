@@ -34,10 +34,13 @@ import static java.util.EnumSet.of;
 public enum EmailAddressCriteria {
 	/**
 	 * This criteria changes the behavior of the domain parsing. If included, the parser will allow 2822 domains, which include single-level domains (e.g.
-	 * bob@localhost) as well as domain literals, e.g.: <p> <p><tt>someone@[192.168.1.100]</tt> or <br><tt>john.doe@[23:33:A2:22:16:1F]</tt> or <br><tt>me@[my
-	 * computer]</tt>
+	 * bob@localhost) as well as domain literals, e.g.:
 	 * <p>
-	 * <p>The RFC says these are valid email addresses, but most people don't like allowing them. If you don't want to allow them, and only want to allow valid
+	 * <code>someone@[192.168.1.100]</code> or<br>
+	 * <code>john.doe@[23:33:A2:22:16:1F]</code> or<br>
+	 * <code>me@[my computer]</code>
+	 * <p>
+	 * The RFC says these are valid email addresses, but most people don't like allowing them. If you don't want to allow them, and only want to allow valid
 	 * domain names (<a href="http://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>, x.y.z.com, etc), and specifically only those with at least two levels
 	 * ("example.com"), then don't include this critera.
 	 */
@@ -46,10 +49,10 @@ public enum EmailAddressCriteria {
 	/**
 	 * This criteria states that as per RFC 2822, quoted identifiers are allowed (using quotes and angle brackets around the raw address), e.g.:
 	 * <p>
-	 * <tt>"John Smith" &lt;john.smith@somewhere.com&gt;</tt>
+	 * <code>"John Smith" &lt;john.smith@somewhere.com&gt;</code>
 	 * <p>
-	 * <p>The RFC says this is a valid mailbox.  If you don't want to allow this, because for example, you only want users to enter in a raw address
-	 * (<tt>john.smith@somewhere.com</tt> - no quotes or angle brackets), then don't include this criteria.
+	 * The RFC says this is a valid mailbox.  If you don't want to allow this, because for example, you only want users to enter in a raw address
+	 * (<code>john.smith@somewhere.com</code> - no quotes or angle brackets), then don't include this criteria.
 	 */
 	ALLOW_QUOTED_IDENTIFIERS,
 
@@ -57,10 +60,13 @@ public enum EmailAddressCriteria {
 	 * This criteria allows &quot;.&quot; to appear in atext (note: only atext which appears in the 2822 &quot;name-addr&quot; part of the address, not the
 	 * other instances)
 	 * <p>
-	 * The addresses: <p><tt>Kayaks.org &lt;kayaks@kayaks.org&gt;</tt> <P><tt>Bob K. Smith&lt;bobksmith@bob.net&gt;</tt>
-	 * <p>
-	 * ...are not valid. They should be: <P><tt>&quot;Kayaks.org&quot; &lt;kayaks@kayaks.org&gt;</tt> <P><tt>&quot;Bob K. Smith&quot;
-	 * &lt;bobksmith@bob.net&gt;</tt>
+	 * The addresses:<br>
+	 * <code>Kayaks.org &lt;kayaks@kayaks.org&gt;</code><br>
+	 * <code>Bob K. Smith&lt;bobksmith@bob.net&gt;</code><br>
+	 * ...are not valid. They should be:<br>
+	 * <code>&quot;Kayaks.org&quot; &lt;kayaks@kayaks.org&gt;</code><br>
+	 * <code>&quot;Bob K. Smith&quot;
+	 * &lt;bobksmith@bob.net&gt;</code>
 	 * <p>
 	 * If this criteria is not included, the parser will act per 2822 and will require the quotes; if included, it will allow the use of &quot;.&quot; without
 	 * quotes.
@@ -70,7 +76,11 @@ public enum EmailAddressCriteria {
 	/**
 	 * This criteria allows &quot;[&quot; or &quot;]&quot; to appear in atext. Not very useful, maybe, but there it is.
 	 * <p>
-	 * The address: <p><tt>[Kayaks] &lt;kayaks@kayaks.org&gt;</tt> ...is not valid. It should be: <P><tt>&quot;[Kayaks]&quot; &lt;kayaks@kayaks.org&gt;</tt>
+	 * The address:
+	 * <p>
+	 * <code>[Kayaks] &lt;kayaks@kayaks.org&gt;</code> ...is not valid. It should be:
+	 * <p>
+	 * <code>&quot;[Kayaks]&quot; &lt;kayaks@kayaks.org&gt;</code>
 	 * <p>
 	 * If this criteria is not included, the parser will act per 2822 and will require the quotes; if included, it will allow them to be missing.
 	 * <p>
@@ -96,10 +106,14 @@ public enum EmailAddressCriteria {
 	ALLOW_PARENS_IN_LOCALPART;
 
 	/**
-	 * The default setting is not strictly 2822 compliant. For example, it does not include the {@link #ALLOW_DOMAIN_LITERALS} criteria, which results in
+	 * The recommended setting is not strictly 2822 compliant. For example, it does not include the {@link #ALLOW_DOMAIN_LITERALS} criteria, which results in
 	 * exclusions on single domains. Useful for cleaning up email strings that other middleware (ie. the next server) will be able to understand.
 	 * <p>
-	 * Included in the defaults are: <ul> <li>{@link #ALLOW_QUOTED_IDENTIFIERS}</li> <li>{@link #ALLOW_PARENS_IN_LOCALPART}</li> </ul>.
+	 * Included in the recommended defaults are:
+	 * <ul>
+	 *     <li>{@link #ALLOW_QUOTED_IDENTIFIERS}</li>
+	 *     <li>{@link #ALLOW_PARENS_IN_LOCALPART}</li>
+	 * </ul>.
 	 */
 	public static final EnumSet<EmailAddressCriteria> DEFAULT = of(ALLOW_QUOTED_IDENTIFIERS, ALLOW_PARENS_IN_LOCALPART);
 
