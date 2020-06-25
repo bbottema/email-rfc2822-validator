@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.github.bbottema</groupId>
 		<artifactId>standard-project-parent</artifactId>
-		<version>1.0.10</version>
+		<version>1.0.12</version>
 	</parent>
 
 	<artifactId>emailaddress-rfc2822</artifactId>
