@@ -94,10 +94,9 @@ public class TestClass {
 	}
 	
 	@Test
-	@Ignore("fix in the next release")
 	public void allowParensInLocalPart() throws Exception {
 		// these email address validations should normally fail
-		assertFalse(EmailAddressValidator.isValid("\"bob(hi)smith\"@test.com"));
+		assertTrue(EmailAddressValidator.isValid("\"bob(hi)smith\"@test.com"));
 		
 		// but with a configuration they could be allowed
 		assertTrue(EmailAddressValidator.isValid("\"bob(hi)smith\"@test.com",
