@@ -113,4 +113,16 @@ public class TestClass {
 		assertTrue(EmailAddressValidator.isValid("\"John Smith\" <john.smith@somewhere.com>",
 				EnumSet.of(ALLOW_QUOTED_IDENTIFIERS)));
 	}
+	
+	@Test
+	public void testIllegalCharacters() {
+		String email = "test Mail <noreply@testmail.com>";
+		
+		assertThat(EmailAddressParser.getAddressParts(email, RECOMMENDED, true))
+				.containsExactlyInAnyOrder(
+						"test Mail",
+						"noreply",
+						"testmail.com"
+				);
+	}
 }
