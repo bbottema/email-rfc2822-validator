@@ -63,6 +63,8 @@ v2.3.0
 
 - [#21](https://github.com/bbottema/email-rfc2822-validator/issues/21): Make Jakarta Mail dependency used for parsing (not validation) optional
 
+NOTE: Jakarta Mail is now an optional dependency, which you need to add yourself, but only if you use the parsing facilities of this library (arther than only the validation function)
+
 
 v2.2.0
 
