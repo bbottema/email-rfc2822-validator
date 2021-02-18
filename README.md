@@ -18,7 +18,7 @@ email-rfc2822-validator is available in Maven Central:
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
 </dependency>
 ```
 
@@ -58,6 +58,11 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_D
 
 
 ### Latest Progress ###
+
+v2.3.0
+
+- [#21](https://github.com/bbottema/email-rfc2822-validator/issues/21): Make Jakarta Mail dependency used for parsing (not validation) optional
+
 
 v2.2.0
 
