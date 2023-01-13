@@ -18,7 +18,7 @@ email-rfc2822-validator is available in Maven Central:
 <dependency>
     <groupId>com.github.bbottema</groupId>
     <artifactId>emailaddress-rfc2822</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.1</version>
 </dependency>
 ```
 
@@ -58,6 +58,11 @@ boolean isValid = EmailAddressValidator.isValid(emailaddress, EnumSet.of(ALLOW_D
 
 
 ### Latest Progress ###
+
+v2.3.1
+
+- [#24](https://github.com/bbottema/email-rfc2822-validator/issues/24): Bug: Published JARs for versions 2.2.0 and 2.3.0 have an invalid module name in MANIFEST.MF
+
 
 v2.3.0
 
