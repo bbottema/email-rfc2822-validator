@@ -18,6 +18,7 @@
 	<inceptionYear>2016</inceptionYear>
 
 	<properties>
+		<automaticModuleName>org.hazlewood.connor.bottema.emailaddress</automaticModuleName>
 		<license.owner.name>Benny Bottema and Casey Connor</license.owner.name>
 		<license.owner.email>benny@bennybottema.com and ahoy@caseyconnor.org</license.owner.email>
 	</properties>
