@@ -101,7 +101,7 @@ final class Dragons {
 				criteria.contains(EmailAddressCriteria.ALLOW_SQUARE_BRACKETS_IN_A_TEXT) ? "\\[\\]" : "");
 		// regular atext is same as atext but has no . or [ or ] allowed, no matter the class prefs, to prevent
 		// long recursions on e.g. "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t"
-		final String regularAtext = "[a-zA-Z0-9!#-'*+\\-/=?^-`{-~]";
+		final String regularAtext = "[\\u0E00-\\u0E7Fa-zA-Z0-9!#-'*+\\-/=?^-`{-~]";
 
 		final String atom = format("(?:%s)?%s+(?:%s)?", cfws, atext, cfws);
 		final String dotAtomText = format("%s+(?:\\.%s+)*", regularAtext, regularAtext);

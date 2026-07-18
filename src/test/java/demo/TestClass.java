@@ -50,6 +50,14 @@ public class TestClass {
 		String emailaddress = "\"ßoµ\" <notifications@example.com>".replaceAll("[^\\x00-\\x7F]", "");
 		assertThat(EmailAddressParser.getAddressParts(emailaddress, RFC_COMPLIANT, false)).isNotEmpty();
 	}
+
+	@Test
+	public void testEmailAddressThai(){
+		assertEmail("email-test@universal-acceptance-test.international", true);
+		assertEmail("email-test@universal-acceptance-test.icu", true);
+		assertEmail("อีเมลทดสอบ@ยูเอทดสอบ.ไทย", true);
+		assertEmail("อีเมลทดสอบ@ทีเอชนิค.องค์กร.ไทย", true);
+	}
 	
 	@Test
 	public void testAddressGithub18() {
